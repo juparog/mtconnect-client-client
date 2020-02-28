@@ -1,0 +1,40 @@
+const path =require('path');
+
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+const HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
+  template: './public/index.html',
+  filename: 'index.html',
+  inject: 'body'
+});
+
+const config ={
+  entry: './src/index.jsx',
+  output: {
+    path: path.resolve('build'),
+    filename: 'bundle.js'
+  },
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx)$/,
+        loader: 'babel-loader',
+        exclude: /node_modules/
+      },
+      {
+        test:/\.css$/,
+        loader:'style-loader!css-loader'
+      },
+      {
+        test: /\.(png|jpg|gif)$/,
+        loader: 'file-loader',
+        options: {
+          name: 'img/[name].[hash:7].[ext]'
+        }
+      }
+    ]
+  },
+  plugins: [ HtmlWebpackPluginConfig ]
+};
+
+module.exports = config;
