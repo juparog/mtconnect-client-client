@@ -1,6 +1,7 @@
 // Dependencias
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Dotenv from 'dotenv';
 
 import { ApolloProvider } from '@apollo/react-hooks';
 
@@ -13,6 +14,9 @@ import App from './App.jsx';
 
 // Cliente para GraphQL
 import Client from './apollo';
+
+// Configuracion de las variables globales
+Dotenv.config()
 
 ReactDOM.render(
     <ApolloProvider client={Client.client}>

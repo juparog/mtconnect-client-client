@@ -47,6 +47,9 @@ const config ={
     open: true,
     disableHostCheck: true,
     contentBase: path.join(__dirname, 'public')
+  },
+  node: {
+    fs: "empty"
   }
 };
 
