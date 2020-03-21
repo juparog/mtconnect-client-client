@@ -1,13 +1,19 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router, Switch } from "react-router-dom";
 
-import Routes from './routes';
+import Routes from './routes/index';
+import RouteWithSubRoutes from './components/routeWithSubRoutes/RouteWithSubRoutes';
 
 class App extends Component {
+  
   render() {
     return (
       <Router>
-        <Routes />
+          <Switch>
+            {Routes.map((route, i) => (
+              <RouteWithSubRoutes key={i} {...route} />
+            ))}
+          </Switch>
       </Router>
     );
   }

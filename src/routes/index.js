@@ -1,15 +1,24 @@
-import React from "react";
-import { Switch, Route } from "react-router-dom";
-import routes from "./routes";
+import Homepage from '../containers/homepage/Homepage.jsx';
+import Dashboard from '../containers/dashboard/Dashboard.jsx';
+import Session from '../containers/session/Session.jsx';
+import NoFoundPage from '../components/errors/NoFoundPage.jsx';
 
-import Home from "../containers/home/Home.jsx";
-import Dashboard from "../containers/dashboard/Dashboard";
 
-export default function Routes() {
-  return (
-    <Switch>
-      <Route exact path={routes.home} component={Home} />
-      <Route path={routes.dashboard} component={Dashboard} />
-    </Switch>
-  );
-}
+export default [
+    {
+        exact: true,
+        path: "/dashboard",
+        component: Dashboard
+    },
+    {
+        path: "/session",
+        component: Session
+    },
+    {
+        path: "/",
+        component: Homepage
+    },
+    {
+        component: NoFoundPage
+    }
+  ];

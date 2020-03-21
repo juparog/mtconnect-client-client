@@ -8,12 +8,17 @@ const HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
   inject: 'body'
 });
 
+const port = process.env.PORT || 8080;
+
 const config ={
+  mode: 'development',
   entry: './src/index.jsx',
   output: {
     path: path.resolve('build'),
-    filename: 'bundle.js'
+    filename: 'bundle.[hash].js',
+    publicPath: '/',
   },
+  devtool: 'inline-source-map',
   module: {
     rules: [
       {
@@ -34,7 +39,15 @@ const config ={
       }
     ]
   },
-  plugins: [ HtmlWebpackPluginConfig ]
+  plugins: [ HtmlWebpackPluginConfig ],
+  devServer: {
+    host: 'localhost',
+    port: port,
+    historyApiFallback: true,
+    open: true,
+    disableHostCheck: true,
+    contentBase: path.join(__dirname, 'public')
+  }
 };
 
 module.exports = config;
