@@ -7,7 +7,8 @@ const { InMemoryCache } = require('apollo-cache-inmemory');
 
 // direccion url principal para solicitud de datos
 // https://mtconnect-client-server.herokuapp.com/graphql
-const httpLink = new HttpLink({ uri: 'http://localhost:4000/graphql' })
+// http://localhost:4000/graphql
+const httpLink = new HttpLink({ uri: 'https://mtconnect-client-server.herokuapp.com/graphql' })
 
 // Middleware de autenticacion
 const authMiddleware = new ApolloLink((operation, forward) => {
