@@ -15,7 +15,7 @@ import App from './App.jsx';
 import Client from './apollo';
 
 ReactDOM.render(
-    <ApolloProvider client={Client}>
+    <ApolloProvider client={Client.client}>
         <App />
     </ApolloProvider>,
     document.getElementById('root')

@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import { Switch } from 'react-router-dom';
 
 // rutas
-import SessionRoutes from '../../routes/session';
-import RouteWithSubRoutes from '../../components/routeWithSubRoutes/RouteWithSubRoutes';
+import SessionRoutes from '../../routes/session.jsx';
+import RouteWithSubRoutes from '../../components/routeWithSubRoutes/RouteWithSubRoutes.jsx';
 
 class Session extends Component{
 

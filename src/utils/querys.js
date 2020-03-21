@@ -1,8 +1,8 @@
 // GraphQL
-import gql from 'graphql-tag';
+const gql = require('graphql-tag');
 
 // Objeto de querys a exportar
-export default {
+exports.Querys = {
 
     /*
     *  Querys para usuarios

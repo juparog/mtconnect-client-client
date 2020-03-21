@@ -6,10 +6,10 @@ import { Switch } from 'react-router-dom';
 // Componentes
 import NavbarHome from '../../components/homepage/NavbarHome.jsx';
 import FooterHome from '../../components/homepage/FooterHome.jsx';
-import RouteWithSubRoutes from '../../components/routeWithSubRoutes/RouteWithSubRoutes'
+import RouteWithSubRoutes from '../../components/routeWithSubRoutes/RouteWithSubRoutes.jsx'
 
 // Rutas
-import HomepageRoutes from '../../routes/homepage';
+import HomepageRoutes from '../../routes/homepage.jsx';
 
 class Homepage extends Component {
   

@@ -1,12 +1,13 @@
 // Dependencias
-import { ApolloClient } from 'apollo-client';
-import { gql } from "apollo-boost";
-import { HttpLink } from 'apollo-link-http';
-import { ApolloLink, concat } from 'apollo-link';
-import { InMemoryCache } from 'apollo-cache-inmemory';
+const { ApolloClient } = require('apollo-client');
+const { gql } = require("apollo-boost");
+const { HttpLink } = require('apollo-link-http');
+const { ApolloLink } = require('apollo-link');
+const { InMemoryCache } = require('apollo-cache-inmemory');
 
 // direccion url principal para solicitud de datos
-const httpLink = new HttpLink({ uri: 'https://mtconnect-client-server.herokuapp.com/graphql' })
+// https://mtconnect-client-server.herokuapp.com/graphql
+const httpLink = new HttpLink({ uri: 'http://localhost:4000/graphql' })
 
 // Middleware de autenticacion
 const authMiddleware = new ApolloLink((operation, forward) => {
@@ -49,4 +50,4 @@ client.query({
     `
 }).then(result => console.log("Api graphql MTConnect Client conectada!, "+result.data.hello));
 
-export default client;
+exports.client = client;

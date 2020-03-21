@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { Query } from 'react-apollo'
 
 // Querys
-import Querys from '../../utils/querys';
+import { Querys } from '../../utils/querys';
 
 class Home extends Component {
   

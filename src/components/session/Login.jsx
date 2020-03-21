@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Mutation } from 'react-apollo';
 
 // Mutaciones
-import Mutations from '../../utils/mutations';
+import { Mutations } from '../../utils/mutations';
 
 // Recursos
 import logo from '../../../public/logo.png';

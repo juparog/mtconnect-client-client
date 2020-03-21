@@ -1,8 +1,8 @@
 // GraphQL
-import gql from 'graphql-tag';
+const gql = require('graphql-tag');
 
 // Objeto de mutaciones a exportar
-export default {
+exports.Mutations = {
 
     /*
     *  Mutaciones para usuarios

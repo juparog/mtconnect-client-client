@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { ListGroup } from 'react-bootstrap';
 
 // Analizador de datos
-import DataParser from '../../mtconnect/dataParser';
+import DataParser from '../../mtconnect/dataParser.jsx';
 
 class SidebarDash extends Component {
 

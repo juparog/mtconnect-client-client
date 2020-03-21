@@ -1,4 +1,4 @@
-import axios from 'axios';
+const axios = require('axios');
 
 const AgentConection = {
 
@@ -7,4 +7,4 @@ const AgentConection = {
     }
 }
 
-export default AgentConection;
+exports.AgentConection = AgentConection;

@@ -15,7 +15,7 @@ import MessageCard from '../../components/messages/MessageCard.jsx';
 import DeviceDataShow from '../../components/dashboard/DeviceDataShow.jsx';
 
 // Analizador de datos
-import DataParser from '../../mtconnect/dataParser';
+import DataParser from '../../mtconnect/dataParser.jsx';
 
 class Dashboard extends Component {
   constructor(props){

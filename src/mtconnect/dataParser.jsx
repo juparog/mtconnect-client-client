@@ -1,6 +1,6 @@
 import convert from 'xml-js';
 
-const agentRequests = {
+const dataParser = {
 
     /*
         => Convierte un cadena con formato XML a un archivo con formato JSON.
@@ -88,4 +88,5 @@ const agentRequests = {
         }
     }
 }
-export default agentRequests;
+
+export default dataParser;
