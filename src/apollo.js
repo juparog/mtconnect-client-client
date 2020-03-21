@@ -40,7 +40,9 @@ const authAfterware = new ApolloLink((operation, forward) => {
 // Cliente graphql
 const client = new ApolloClient({
     link: authAfterware.concat(authMiddleware.concat(httpLink)),
-    cache: new InMemoryCache()
+    cache: new InMemoryCache(),
+    introspection: true,
+    playground: true,
 });
 
 client.query({
