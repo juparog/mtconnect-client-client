@@ -86,6 +86,9 @@ class Login extends Component{
                                                 // redireccionar
                                                 this.props.history.push("/");
                                             }
+                                        }).catch( err => {
+                                            console.log("Error de conexion:")
+                                            console.log(err)
                                         });
                                         event.preventDefault();
                                     }

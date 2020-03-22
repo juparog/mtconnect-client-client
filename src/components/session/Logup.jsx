@@ -62,6 +62,8 @@ class Logup extends Component{
                         }}).then( res => {
                             const { success, errors } = res.data.createUser;
                             if(!success){
+                                this.props.history.push("/");
+                            }else{
                                 this.setState({
                                     d_alert: 'd-block',
                                     errors_singup: errors

@@ -1,5 +1,4 @@
 const path = require('path');
-const npm_package = require('./package.json')
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
@@ -12,14 +11,13 @@ const HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
 const port = process.env.PORT || 8080;
 
 const config ={
-  mode: 'development',
+  devtool: 'inline-source-map',
   entry: './src/index.jsx',
   output: {
     path: path.resolve('build'),
     filename: 'bundle.[hash].js',
     publicPath: '/',
   },
-  devtool: 'inline-source-map',
   module: {
     rules: [
       {

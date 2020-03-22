@@ -2,7 +2,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Dotenv from 'dotenv';
-import './path';
 
 import { ApolloProvider } from '@apollo/react-hooks';
 
