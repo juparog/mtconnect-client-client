@@ -4,12 +4,12 @@ import { Container } from 'react-bootstrap';
 import { Switch } from 'react-router-dom';
 
 // Componentes
-import NavbarHome from '../../components/homepage/NavbarHome.jsx';
-import FooterHome from '../../components/homepage/FooterHome.jsx';
-import RouteWithSubRoutes from '../../components/routeWithSubRoutes/RouteWithSubRoutes.jsx'
+import NavbarHome from 'Components/homepage/NavbarHome.jsx';
+import FooterHome from 'Components/homepage/FooterHome.jsx';
+import RouteWithSubRoutes from 'Components/routeWithSubRoutes/RouteWithSubRoutes.jsx';
 
 // Rutas
-import HomepageRoutes from '../../routes/homepage.jsx';
+import HomepageRoutes from 'Routes/homepage.jsx';
 
 class Homepage extends Component {
   

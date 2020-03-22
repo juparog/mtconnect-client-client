@@ -1,4 +1,5 @@
-const path =require('path');
+const path = require('path');
+const npm_package = require('./package.json')
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
@@ -49,7 +50,14 @@ const config ={
     contentBase: path.join(__dirname, 'public')
   },
   node: {
-    fs: "empty"
+    fs: "empty",
+    module: "empty"
+  },
+  resolve: {
+    alias: {
+      Components: path.resolve(__dirname, 'src/components/'),
+      Routes: path.resolve(__dirname, 'src/routes/'),
+    }
   }
 };
 

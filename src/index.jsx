@@ -2,12 +2,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Dotenv from 'dotenv';
+import './path';
 
 import { ApolloProvider } from '@apollo/react-hooks';
 
 // Importing the Bootstrap CSS y CSS peronalizado
-import './styleshet/bootstrap-sandstone.css';
-import './styleshet/index.css';
+import './stylesheet/bootstrap-sandstone.css';
+import './stylesheet/index.css';
 
 // Component6e principal de entrada
 import App from './App.jsx';
