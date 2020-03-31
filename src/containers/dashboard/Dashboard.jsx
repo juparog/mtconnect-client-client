@@ -1,34 +1,35 @@
 // Dependencias
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
-
-//Autenticacion
-import Auth from '../../auth';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 // Componentes
-import NavbarDash from '../../components/dashboard/NavbarDash.jsx';
-import SidebarDash from '../../components/dashboard/SidebarDash.jsx';
-import ConnectModal from '../../components/dashboard/ConnectModal.jsx';
-import Loading from '../../components/messages/Loading.jsx';
-import MessageCard from '../../components/messages/MessageCard.jsx';
-import DeviceDataShow from '../../components/dashboard/DeviceDataShow.jsx';
+import NavbarDash from 'Components/dashboard/NavbarDash';
+import SidebarDash from 'Components/dashboard/SidebarDash';
+import ConnectModal from 'Components/dashboard/ConnectModal';
+import Loading from 'Components/utilities/Loading';
+import MessageCard from 'Components/utilities/MessageCard';
+import DeviceDataShow from 'Components/dashboard/DeviceDataShow';
 
-// Analizador de datos
-import DataParser from '../../mtconnect/dataParser.jsx';
+// Autenticacion
+import Auth from 'Utils/auth';
 
+// Analizador de datos con fomato MTConnect
+import DataParser from 'MTConnect/dataParser';
+
+// Clase del componente que muestra la vista dashboard
 class Dashboard extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
-      show_modal_connect: false,
-      url_data: '',
-      execute_data_request: false,
-      loading_data: false,
-      data: null,
-      mtconnect_data: {},
-      component_data: <>...</>,
-      name_device: ''
+      showModalConnect: false,
+      urlData: '',
+      executeDataRequest: false,
+      loadingData: false,
+      mtconnectData: {},
+      componentData: <>...</>,
+      nameDevice: '',
     };
     this.handleShowModalConnect = this.handleShowModalConnect.bind(this);
     this.setUrlData = this.setUrlData.bind(this);
@@ -37,152 +38,166 @@ class Dashboard extends Component {
     this.setComponentData = this.setComponentData.bind(this);
   }
 
-  handleShowModalConnect(){
-    this.setState({
-      show_modal_connect: true
-    })
-  }
-
-  setUrlData(url){
-    this.setState({
-      url_data: url,
-      execute_data_request: true,
-      show_modal_connect: false,
-      loading_data: true,
-      component_data: <>...</>,
-      mtconnect_data: {},
-      name_device: ''
-    });
-  }
-
-  fetchData(url){
-    if(this.state.execute_data_request){
-      console.log("loading data...");
-      this.setState({
-        execute_data_request: false
-      });
-      axios.get(url)
-      .then((res) => {
-        const data_json = DataParser.getDataJson(res.data);
-        if(data_json.success){
-          const data = data_json.data;
-          if(data.MTConnectDevices){
-            const component_data = this.getComponentData({ index: 0, data });
-            this.setState({
-              loading_data: false,
-              mtconnect_data: data,
-              component_data: component_data.component,
-              name_device: component_data.name_device ? component_data.name_device : ''
-            });
-          }
-        }
-        if(!data_json.success){
-          this.setState({
-            loading_data: false,
-            component_data: <MessageCard 
-                              header="Error"
-                              bg="danger"
-                              title="Tipo de datos"
-                              icon="exclamation-triangle"
-                              message="Error con el formato de datos obtenido" >
-                            </MessageCard>
-          });
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        this.setState({
-          loading_data: false,
-          component_data: <MessageCard
-                            header="Error"
-                            bg="danger"
-                            title="Conexión"
-                            icon="exclamation-triangle"
-                            message={"No se pudo conectar al url suministrado: "+error} >
-                          </MessageCard>
-        });
-      });
+  componentDidUpdate() {
+    const { executeDataRequest, urlData } = this.state;
+    if (executeDataRequest) {
+      this.fetchData(urlData);
     }
   }
 
-  getComponentData(options){
-    const index = options.index ? options.index : 0;
-    const data = options.data ? options.data : this.state.mtconnect_data;
-    if(data.MTConnectDevices){
-      const devices = DataParser.getDevices(data)
-      if(devices.success){
+  setUrlData(url) {
+    this.setState({
+      urlData: url,
+      executeDataRequest: true,
+      showModalConnect: false,
+      loadingData: true,
+      componentData: <>...</>,
+      mtconnectData: {},
+      nameDevice: '',
+    });
+  }
+
+  getComponentData(options) {
+    const index = options.index || 0;
+    let { data } = options;
+    if (!data) {
+      const { mtconnectData } = this.state;
+      data = mtconnectData;
+    }
+    const { MTConnectDevices: mtconnectDevices } = data;
+    if (mtconnectDevices) {
+      const { devices, success } = DataParser.getDevices(data.MTConnectDevices);
+      if (success) {
         return {
           success: true,
-          component: <DeviceDataShow device_data={ devices.devices[index] }/>,
-          name_device: devices.devices[index]._attributes.id
-        }
+          component: <DeviceDataShow data={devices[index]} />,
+          nameDevice: devices[index].attributes.id,
+        };
       }
     }
     return {
       success: false,
-      component: <>No se encontraron dispositivos</>
-    }
+      component: <>No se encontraron dispositivos</>,
+    };
   }
 
-  setComponentData(options){
-    const component_data = this.getComponentData(options);
+  setComponentData(options) {
+    const componentData = this.getComponentData(options);
     this.setState({
-      component_data: component_data.component,
-      name_device: component_data.name_device ? component_data.name_device : ''
+      componentData: componentData.component,
+      nameDevice: componentData.nameDevice ? componentData.nameDevice : '',
     });
   }
 
-  componentDidUpdate(prevProps, prevState){
-    if(this.state.execute_data_request){
-      this.fetchData(this.state.url_data);
+  fetchData(url) {
+    const { executeDataRequest } = this.state;
+    if (executeDataRequest) {
+      console.log('loading data...');
+      this.setState({
+        executeDataRequest: false,
+      });
+      axios.get(url)
+        .then((res) => {
+          console.log('loaded!');
+          const { success, data } = DataParser.getDataJson(res.data);
+          if (success) {
+            const { MTConnectDevices: mtconnectDevices } = data;
+            if (mtconnectDevices) {
+              const componentData = this.getComponentData({ index: 0, data });
+              this.setState({
+                loadingData: false,
+                mtconnectData: data,
+                componentData: componentData.component,
+                nameDevice: componentData.nameDevice ? componentData.nameDevice : '',
+              });
+            }
+          } else {
+            this.setState({
+              loadingData: false,
+              componentData: <MessageCard
+                header="Error"
+                bg="danger"
+                title="Tipo de datos"
+                icon="exclamation-triangle"
+                message="Error con el formato de datos obtenido"
+              />,
+            });
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          this.setState({
+            loadingData: false,
+            componentData: <MessageCard
+              header="Error"
+              bg="danger"
+              title="Conexión"
+              icon="exclamation-triangle"
+              message={`No se pudo conectar al url suministrado: ${error}`}
+            />,
+          });
+        });
     }
   }
 
+  handleShowModalConnect() {
+    this.setState({
+      showModalConnect: true,
+    });
+  }
+
   render() {
+    const {
+      mtconnectData, nameDevice, loadingData, componentData, showModalConnect,
+    } = this.state;
     return (
       <>
-        { Auth.userSignedIn() ?
-          <>
-            <NavbarDash></NavbarDash>
-            
-            <div className="container-fluid py-5 h-100">
-              <div className="row">
+        { Auth.userSignedIn()
+          ? (
+            <>
+              <NavbarDash />
 
-                <SidebarDash 
-                  handleShowModalConnect={this.handleShowModalConnect} 
-                  mtconnect_data={ this.state.mtconnect_data } 
-                  setComponentData={ this.setComponentData } >
-                </SidebarDash>
+              <div className="container-fluid py-5 h-100">
+                <div className="row">
 
-                <main role="main" className="col ml-2 px-4">
-                  <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-1 pb-2 mb-3 border-bottom">
-                    <h1 className="h2">
-                      Dispositivo: <span className="text-primary">{ this.state.name_device }</span>
-                    </h1>
-                    <div className="btn-toolbar mb-2 mb-md-0">
-                      <div className="btn-group mr-2">
-                        <button onClick={this.handleShowModalConnect} type="button" className="btn btn-sm btn-outline-primary py-0">
-                          Conectar<span> </span>
-                          <i className="fas fa-plus-circle"></i>
-                        </button>
+                  <SidebarDash
+                    handleShowModalConnect={this.handleShowModalConnect}
+                    data={mtconnectData.MTConnectDevices || {}}
+                    setComponentData={this.setComponentData}
+                  />
+
+                  <main role="main" className="col ml-2 px-4">
+                    <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-1 pb-2 mb-3 border-bottom">
+                      <h1 className="h2">
+                        Dispositivo:
+                        &nbsp;
+                        <span className="text-primary">{nameDevice}</span>
+                      </h1>
+                      <div className="btn-toolbar mb-2 mb-md-0">
+                        <div className="btn-group mr-2">
+                          <button onClick={this.handleShowModalConnect} type="button" className="btn btn-sm btn-outline-primary py-0">
+                            Conectar
+                            <span> </span>
+                            <FontAwesomeIcon icon="plus-circle" />
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  <h2>Datos:</h2>
-                  { this.state.loading_data ? 
-                    <Loading show={true}></Loading> : null }
-                  { this.state.component_data }
-                </main>
+                    <h2>Datos:</h2>
+                    { loadingData
+                      ? <Loading show /> : null }
+                    { componentData }
+                  </main>
+                </div>
               </div>
-            </div>
-            <ConnectModal 
-              show={this.state.show_modal_connect}
-              setUrlData={this.setUrlData} >
-            </ConnectModal>
-          </> :
-          <Redirect to="/home"></Redirect>
-        }
+              <ConnectModal
+                show={showModalConnect}
+                setUrlData={this.setUrlData}
+              />
+            </>
+          )
+          : <Redirect to="/home" />}
       </>
     );
   }

@@ -1,28 +1,28 @@
-import React, { Component } from "react";
+// Dependencias
+import React, { PureComponent } from 'react';
 import { Switch } from 'react-router-dom';
 
-// rutas
-import SessionRoutes from '../../routes/session.jsx';
-import RouteWithSubRoutes from '../../components/routeWithSubRoutes/RouteWithSubRoutes.jsx';
+// Componentes
+import RouteWithSubRoutes from 'Components/routeWithSubRoutes/RouteWithSubRoutes';
 
-class Session extends Component{
+// Rutas para sesion
+import SessionRoutes from 'Routes/session';
 
-    constructor(props) {
-        super(props);
-    }
-    
-    render(){
-        let url = this.props.match.path;
-        return(
-            <>
-                <Switch>
-                    {SessionRoutes.map((route, i) => (
-                        <RouteWithSubRoutes key={i} {...route} />
-                    ))}
-                </Switch>
-            </>
-        );
-    }
+// Clase para egnerar el componente contenedor del las vistas de sesion
+class Session extends PureComponent {
+  render() {
+    return (
+      <>
+        {/* Se renderiza un componete dependiendo de la ruta */}
+        <Switch>
+          {SessionRoutes.map((route, index) => (
+            <RouteWithSubRoutes key={index.toString()} {...route} />
+          ))}
+        </Switch>
+      </>
+    );
+  }
 }
 
+// esportacion del componente
 export default Session;

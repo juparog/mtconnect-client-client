@@ -1,18 +1,20 @@
+// Dependencias
 import { StyleSheet } from 'aphrodite';
 
+// Estructura con estilos
 const styles = StyleSheet.create({
-  logo_navbar: { 
-    width: "30px",
-    height: "30px"
+  logoNavbar: {
+    width: '30px',
+    height: '30px',
   },
-  hover_link: {
+  hoverLink: {
     ':hover': {
       color: '#007bff',
     },
   },
-  masthead_heading: {
-    fontSize: 'calc(24px + 6vmin)'
-  }
+  mastheadHeading: {
+    fontSize: 'calc(24px + 6vmin)',
+  },
 });
-  
+
 export default styles;

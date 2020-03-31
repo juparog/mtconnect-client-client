@@ -1,20 +1,31 @@
-import React, { Component } from "react";
-import { BrowserRouter as Router, Switch } from "react-router-dom";
+// Dependencias
+import React, { PureComponent } from 'react';
+import { BrowserRouter as Router, Switch } from 'react-router-dom';
 
-import Routes from './routes/index.jsx';
-import RouteWithSubRoutes from './components/routeWithSubRoutes/RouteWithSubRoutes.jsx';
+// Componentes
+import RouteWithSubRoutes from 'Components/routeWithSubRoutes/RouteWithSubRoutes';
+import Flash from 'Components/utilities/Flash';
 
-class App extends Component {
-  
+// Archivo de rutas
+import Routes from 'Routes/index';
+
+class App extends PureComponent {
   render() {
     return (
-      <Router>
+      <>
+        <Flash />
+        {' '}
+        {/* Componente para los flash mensajes */}
+
+        {/* Se renderiza los componentes segun la ruta solicitada */}
+        <Router>
           <Switch>
             {Routes.map((route, i) => (
-              <RouteWithSubRoutes key={i} {...route} />
+              <RouteWithSubRoutes key={i.toString()} {...route} />
             ))}
           </Switch>
-      </Router>
+        </Router>
+      </>
     );
   }
 }
