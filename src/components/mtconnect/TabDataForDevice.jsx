@@ -34,7 +34,7 @@ class TabDataForDevice extends Component {
         case 'DataItems':
           return (
             <AttrTableVertical
-              data={data}
+              data={data.DataItem}
               options={{
                 headers: [
                   { id: 'id', text: 'Id' },

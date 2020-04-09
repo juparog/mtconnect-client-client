@@ -20,11 +20,10 @@ class AttrTableVertical extends Component {
   // Construye el componente en forma de tabla
   static buildComponent(data, options) {
     let arrayItems = [];
-    const { DataItem: dataItem } = data;
-    if (dataItem[0]) {
-      arrayItems = dataItem;
+    if (data[0]) {
+      arrayItems = data;
     } else {
-      arrayItems.push(dataItem);
+      arrayItems.push(data);
     }
     let { headers } = options;
     if (headers == null) {
@@ -126,7 +125,7 @@ class AttrTableVertical extends Component {
 
 // Validacion para las los tipos de propiedades
 AttrTableVertical.propTypes = {
-  data: PropTypes.oneOfType([PropTypes.object]),
+  data: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
   options: PropTypes.shape({
     showIndex: PropTypes.bool,
     tableIndex: PropTypes.string,
@@ -137,7 +136,7 @@ AttrTableVertical.propTypes = {
 
 // Especifica los valores por defecto de props:
 AttrTableVertical.defaultProps = {
-  data: null,
+  data: {},
   options: {
     showIndex: true,
     tableIndex: '#',

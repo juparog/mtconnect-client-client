@@ -13,6 +13,13 @@ import {
   faPlug,
   faUnlink,
   faExclamationTriangle,
+  faCogs,
+  faAlignJustify,
+  faTh,
+  faBoxes,
+  faSitemap,
+  faStream,
+  faAngleDown,
 } from '@fortawesome/free-solid-svg-icons';
 
 library.add(
@@ -26,4 +33,11 @@ library.add(
   faPlug,
   faUnlink,
   faExclamationTriangle,
+  faCogs,
+  faAlignJustify,
+  faTh,
+  faBoxes,
+  faSitemap,
+  faStream,
+  faAngleDown,
 );

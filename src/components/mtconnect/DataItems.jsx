@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Accordion, Card } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 // Componentes
 import AttrTableVertical from 'Components/mtconnect/AttrTableVertical';
@@ -9,7 +10,7 @@ import AttrTableVertical from 'Components/mtconnect/AttrTableVertical';
 /*
     Obtener los componentes de un axes
 */
-class AxesComponents extends Component {
+class DataItems extends Component {
   // Construye el componente para mostrar los datos de axes component
   static buildComponent(data, componentName) {
     let components = [];
@@ -26,10 +27,12 @@ class AxesComponents extends Component {
           <div key={index.toString()}>
             <p>
               Elementos de datos para el componente &nbsp;
-              { item.attributes.name || item.attributes.id || `item_${index + 1}` }
+              <strong className="text-uppercase">
+                { item.attributes.name || item.attributes.id || `item_${index + 1}` }
+              </strong>
             </p>
             <AttrTableVertical
-              data={item.DataItems}
+              data={item.DataItems.DataItem}
               options={{
                 showIndex: false,
                 tableSize: 'sm',
@@ -53,10 +56,12 @@ class AxesComponents extends Component {
         <Card bg="primary" className="w-100">
           <Accordion.Toggle as={Card.Header} eventKey="0" style={{ cursor: 'pointer' }}>
             <span className="h6 d-block">
-              Componentes&nbsp;
-              {componentName || '(nommbre no definido)'}
+              Componente&nbsp;
+              <strong className="text-uppercase">
+                {componentName || '(nommbre no definido)'}
+              </strong>
               &nbsp;&nbsp;
-              <i className="fas fa-angle-down" />
+              <FontAwesomeIcon icon="angle-down" size="lg" />
               &nbsp;
               ( ver + )
             </span>
@@ -64,7 +69,7 @@ class AxesComponents extends Component {
           <Accordion.Collapse eventKey="0">
             <Card.Body>
               <AttrTableVertical
-                data={{ DataItem: components }}
+                data={components}
                 options={{
                   showIndex: false,
                   tableSize: 'sm',
@@ -115,11 +120,11 @@ class AxesComponents extends Component {
     return (
       <>
         { data
-          ? AxesComponents.buildComponent(data, componentName)
+          ? DataItems.buildComponent(data, componentName)
           : (
             <p>
               Se debe cargar una data para que el componente
-              <strong> AxesComponents</strong>
+              <strong> DataItems</strong>
               &nbsp;funcione correctamente
             </p>
           )}
@@ -129,15 +134,15 @@ class AxesComponents extends Component {
 }
 
 // Validacion para las los tipos de propiedades
-AxesComponents.propTypes = {
-  data: PropTypes.oneOfType([PropTypes.array]),
+DataItems.propTypes = {
+  data: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
   componentName: PropTypes.string,
 };
 
 // Especifica los valores por defecto de props:
-AxesComponents.defaultProps = {
+DataItems.defaultProps = {
   data: {},
   componentName: 'nombre por defecto',
 };
 
-export default AxesComponents;
+export default DataItems;

@@ -1,7 +1,7 @@
 // Dependencias
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-import axios from 'axios';
+import Axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 // Componentes
@@ -96,7 +96,7 @@ class Dashboard extends Component {
       this.setState({
         executeDataRequest: false,
       });
-      axios.get(url)
+      Axios.get(url)
         .then((res) => {
           console.log('loaded!');
           const { success, data } = DataParser.getDataJson(res.data);
@@ -148,7 +148,12 @@ class Dashboard extends Component {
 
   render() {
     const {
-      mtconnectData, nameDevice, loadingData, componentData, showModalConnect,
+      mtconnectData,
+      nameDevice,
+      loadingData,
+      componentData,
+      showModalConnect,
+      urlData,
     } = this.state;
     return (
       <>
@@ -183,8 +188,10 @@ class Dashboard extends Component {
                         </div>
                       </div>
                     </div>
-
-                    <h2>Datos:</h2>
+                    <h2>
+                      Datos:&nbsp;
+                      <span className="badge badge-secondary">{urlData}</span>
+                    </h2>
                     { loadingData
                       ? <Loading show /> : null }
                     { componentData }

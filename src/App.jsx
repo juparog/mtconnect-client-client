@@ -13,9 +13,8 @@ class App extends PureComponent {
   render() {
     return (
       <>
-        <Flash />
-        {' '}
         {/* Componente para los flash mensajes */}
+        <Flash />
 
         {/* Se renderiza los componentes segun la ruta solicitada */}
         <Router>

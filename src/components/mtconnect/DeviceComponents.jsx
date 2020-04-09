@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 // Componentes
 import AttrTableVertical from 'Components/mtconnect/AttrTableVertical';
 import AttrTableHorizontal from 'Components/mtconnect/AttrTableHorizontal';
-import AxesComponents from 'Components/mtconnect/AxesComponents';
+import DataItems from 'Components/mtconnect/DataItems';
 
 /*
     Genera un componete REACT con los datos de los componentes de un dispositivo
@@ -15,42 +15,57 @@ class DeviceComponents extends Component {
   // Funciones para contruir los componentes
   static buildComponent(data) {
     const components = [];
+    let componentIndex = 0;
     // Obtener los axes
     if (data.Axes) {
-      let axesComponentIndex = 0;
-      const axes = [
-        <div key={axesComponentIndex += 1} className="card-title h5">
-          Ejes
-          <hr className="bg-white" />
-        </div>,
-      ];
-      // Obtener los atributos de axes
-      axes.push(
-        <div key={axesComponentIndex += 1}>
-          { DeviceComponents.getAttrAxes(data.Axes)}
-        </div>,
-      );
-      // Obtener los dataitems para axes
-      axes.push(
-        <div key={axesComponentIndex += 1}>
-          { DeviceComponents.getDataItemsAxes(data.Axes)}
-        </div>,
-      );
-      // Obtener los components para axes
-      axes.push(
-        <div key={axesComponentIndex += 1}>
-          { DeviceComponents.getComponentsAxes(data.Axes) }
-        </div>,
-      );
-      components.push(axes);
+      components.push(DeviceComponents.getDataComponent(data.Axes, 'Axes', componentIndex));
+    }
+    // Obtener los controller
+    if (data.Controller) {
+      components.push(DeviceComponents.getDataComponent(data.Controller, 'Controller', componentIndex));
+    }
+    // Obtener los systems
+    if (data.Systems) {
+      components.push(DeviceComponents.getDataComponent(data.Systems, 'Systems', componentIndex));
     }
     if (!components.length) {
-      components.push(<p className="d-block">No disponible</p>);
+      components.push(<p key={componentIndex += 1} className="d-block">No disponible</p>);
     }
     return components;
   }
 
-  static getAttrAxes(data) {
+  static getDataComponent(data, nameComponent, index) {
+    let componentIndex = index || 0;
+    const dataComponent = [
+      <div key={componentIndex += 1} className="card-title h5">
+        <h3 className="mb-0">
+          <strong className="badge badge-secondary text-uppercase">{nameComponent}</strong>
+        </h3>
+        <hr className="bg-white" />
+      </div>,
+    ];
+    // Obtener los atributos de systems
+    dataComponent.push(
+      <div key={componentIndex += 1}>
+        { DeviceComponents.getAttrComponent(data)}
+      </div>,
+    );
+    // Obtener los dataitems para systems
+    dataComponent.push(
+      <div key={componentIndex += 1}>
+        { DeviceComponents.getDataItemsComponent(data)}
+      </div>,
+    );
+    // Obtener los components para systems
+    dataComponent.push(
+      <div key={componentIndex += 1}>
+        { DeviceComponents.getComponentsComponent(data) }
+      </div>,
+    );
+    return dataComponent;
+  }
+
+  static getAttrComponent(data) {
     // Obtener los atributos de axes
     if (data.attributes) {
       return (
@@ -70,13 +85,13 @@ class DeviceComponents extends Component {
     );
   }
 
-  static getDataItemsAxes(data) {
+  static getDataItemsComponent(data) {
     if (data.DataItems) {
       return (
         <>
           <span className="h6">Elementos de datos:</span>
           <AttrTableVertical
-            data={data.DataItems}
+            data={data.DataItems.DataItem}
             options={{
               showIndex: false,
               headers: [
@@ -90,14 +105,14 @@ class DeviceComponents extends Component {
       );
     }
     return (
-      <span className="h6">
+      <span className="h6 d-inline-block mb-3">
         Elementos de datos:
         <strong> No disponible</strong>
       </span>
     );
   }
 
-  static getComponentsAxes(data) {
+  static getComponentsComponent(data) {
     const { Components: components } = data;
     if (components) {
       const element = [];
@@ -109,9 +124,9 @@ class DeviceComponents extends Component {
           case 'Rotary':
             element.push(
               <div key={index + 1}>
-                <AxesComponents
+                <DataItems
                   data={values[index]}
-                  componentName="rotativo"
+                  componentName="Rotary"
                 />
               </div>,
             );
@@ -119,9 +134,19 @@ class DeviceComponents extends Component {
           case 'Linear':
             element.push(
               <div key={index + 1}>
-                <AxesComponents
+                <DataItems
                   data={values[index]}
-                  componentName="lineales"
+                  componentName="Linear"
+                />
+              </div>,
+            );
+            break;
+          case 'Path':
+            element.push(
+              <div key={index + 1}>
+                <DataItems
+                  data={values[index]}
+                  componentName="Path"
                 />
               </div>,
             );
@@ -129,9 +154,9 @@ class DeviceComponents extends Component {
           default:
             element.push(
               <div key={index + 1}>
-                <AxesComponents
+                <DataItems
                   data={values[index]}
-                  componentName="property"
+                  componentName={keys[index]}
                 />
               </div>,
             );

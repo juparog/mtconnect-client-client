@@ -30,6 +30,7 @@
             // "excepciones" : [ "RouteWithSubRoutes" ]
         }],
         "camelcase": ["error", {"allow": ["^UNSAFE_"]}]
+        //"linebreak-style": ["error", "windows"]
     },
     "settings": {
         "import/resolver": "webpack" 

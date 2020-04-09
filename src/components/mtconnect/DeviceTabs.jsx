@@ -2,6 +2,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Tabs, Tab, Card } from 'react-bootstrap';
+import ReactJson from 'react-json-view';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 // Componentes
 import TabDataForDevice from 'Components/mtconnect/TabDataForDevice';
@@ -35,13 +37,45 @@ class DeviceTabs extends Component {
     }
     if (!tabs.length) {
       tabs.push(
-        <Tab eventKey="0" title="Sin pestañas">
+        <Tab eventKey="0" title="No disponible">
           <Card bg="danger">
             <Card.Body>
               <Card.Title>Sin datos</Card.Title>
               <Card.Text>
                 Este dispositivo no tiene datos para mostrar
               </Card.Text>
+            </Card.Body>
+          </Card>
+        </Tab>,
+      );
+    } else {
+      let indexTab = tabs.length;
+      const titleViewerDataTab = (
+        <>
+          <FontAwesomeIcon icon="sitemap" size="lg" />
+          &nbsp;Visor de datos
+        </>
+      );
+      tabs.push(
+        <Tab key={indexTab += 1} eventKey={indexTab} title={titleViewerDataTab}>
+          <Card className="bg-primary text-white">
+            <Card.Body>
+              <ReactJson src={data} theme="monokai" />
+            </Card.Body>
+          </Card>
+        </Tab>,
+      );
+      const titleDataRealTimeTab = (
+        <>
+          <FontAwesomeIcon icon="stream" size="lg" />
+          &nbsp;Estado actual
+        </>
+      );
+      tabs.push(
+        <Tab key={indexTab += 1} eventKey={indexTab} title={titleDataRealTimeTab}>
+          <Card className="bg-primary text-white">
+            <Card.Body>
+              datos en tiempo real
             </Card.Body>
           </Card>
         </Tab>,
@@ -54,16 +88,36 @@ class DeviceTabs extends Component {
     let title = 'titulo por defecto';
     switch (key.toString()) {
       case 'attributes':
-        title = 'Atributos';
+        title = (
+          <span>
+            <FontAwesomeIcon icon="cogs" size="lg" />
+            &nbsp;Atributos
+          </span>
+        );
         break;
       case 'Description':
-        title = 'Descripción';
+        title = (
+          <span>
+            <FontAwesomeIcon icon="align-justify" size="lg" />
+            &nbsp;Descripción
+          </span>
+        );
         break;
       case 'DataItems':
-        title = 'Elementos de datos';
+        title = (
+          <span>
+            <FontAwesomeIcon icon="th" size="lg" />
+            &nbsp;Elementos de datos
+          </span>
+        );
         break;
       case 'Components':
-        title = 'Componentes';
+        title = (
+          <span>
+            <FontAwesomeIcon icon="boxes" size="lg" />
+            &nbsp;Componentes
+          </span>
+        );
         break;
       default:
         title = key;
