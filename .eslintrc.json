@@ -29,8 +29,8 @@
             "custom": "ignore" 
             // "excepciones" : [ "RouteWithSubRoutes" ]
         }],
-        "camelcase": ["error", {"allow": ["^UNSAFE_"]}]
-        //"linebreak-style": ["error", "windows"]
+        "camelcase": ["error", {"allow": ["^UNSAFE_"]}],
+        "linebreak-style": ["error", "windows"]
     },
     "settings": {
         "import/resolver": "webpack" 
