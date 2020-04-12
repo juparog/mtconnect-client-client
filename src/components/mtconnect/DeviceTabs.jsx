@@ -7,13 +7,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 // Componentes
 import TabDataForDevice from 'Components/mtconnect/TabDataForDevice';
+import XmlDataTab from 'Components/mtconnect/XmlDataTab';
 
 /*
     Genera el componente de pestañas para los datos del dispositivo.
 */
 class DeviceTabs extends Component {
   // Contrucciond del componente de pestañas
-  static buildComponent(data) {
+  static buildComponent(data, url) {
     const tabs = [];
     if (data) {
       const keys = Object.keys(data);
@@ -65,17 +66,32 @@ class DeviceTabs extends Component {
           </Card>
         </Tab>,
       );
-      const titleDataRealTimeTab = (
+      const titleCurrentTab = (
         <>
           <FontAwesomeIcon icon="stream" size="lg" />
-          &nbsp;Estado actual
+          &nbsp;XML current
         </>
       );
       tabs.push(
-        <Tab key={indexTab += 1} eventKey={indexTab} title={titleDataRealTimeTab}>
+        <Tab key={indexTab += 1} eventKey={indexTab} title={titleCurrentTab}>
           <Card className="bg-primary text-white">
             <Card.Body>
-              datos en tiempo real
+              <XmlDataTab url={`${url}/current`} nameDevice={data.attributes.name} />
+            </Card.Body>
+          </Card>
+        </Tab>,
+      );
+      const titleSampleTab = (
+        <>
+          <FontAwesomeIcon icon="stream" size="lg" />
+          &nbsp;XML sample
+        </>
+      );
+      tabs.push(
+        <Tab key={indexTab += 1} eventKey={indexTab} title={titleSampleTab}>
+          <Card className="bg-primary text-white">
+            <Card.Body>
+              <XmlDataTab url={`${url}/sample`} nameDevice={data.attributes.name} />
             </Card.Body>
           </Card>
         </Tab>,
@@ -131,6 +147,7 @@ class DeviceTabs extends Component {
     super(props);
     this.state = {
       data: props.data,
+      url: props.url,
     };
   }
 
@@ -146,13 +163,13 @@ class DeviceTabs extends Component {
   }
 
   render() {
-    const { data } = this.state;
+    const { data, url } = this.state;
     return (
       <>
         { data
           ? (
             <Tabs defaultActiveKey="0" id="uncontrolled-tab-example">
-              { DeviceTabs.buildComponent(data) }
+              { DeviceTabs.buildComponent(data, url) }
             </Tabs>
           )
           : (
@@ -170,11 +187,13 @@ class DeviceTabs extends Component {
 // Validacion para las los tipos de propiedades
 DeviceTabs.propTypes = {
   data: PropTypes.oneOfType([PropTypes.object]),
+  url: PropTypes.string,
 };
 
 // Especifica los valores por defecto de props:
 DeviceTabs.defaultProps = {
   data: {},
+  url: null,
 };
 
 export default DeviceTabs;

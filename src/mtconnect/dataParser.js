@@ -91,6 +91,28 @@ const getDeviceNames = (devices) => {
   }
 };
 
+const getStream = (data) => {
+  let deviceStream = [];
+  if (data.Streams) {
+    if (data.Streams.DeviceStream) {
+      if (data.Streams.DeviceStream[0]) {
+        deviceStream = data.Streams.DeviceStream;
+      } else {
+        deviceStream.push(data.Streams.DeviceStream);
+      }
+      return ({
+        success: true,
+        deviceStream,
+      });
+    }
+  }
+  return ({
+    success: false,
+    deviceStream: {},
+  });
+};
+
 exports.getDataJson = getDataJson;
 exports.getDevices = getDevices;
 exports.getDeviceNames = getDeviceNames;
+exports.getStream = getStream;

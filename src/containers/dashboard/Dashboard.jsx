@@ -65,12 +65,14 @@ class Dashboard extends Component {
       data = mtconnectData;
     }
     const { MTConnectDevices: mtconnectDevices } = data;
+    // console.log(data);
     if (mtconnectDevices) {
       const { devices, success } = DataParser.getDevices(data.MTConnectDevices);
       if (success) {
+        const { urlData } = this.state;
         return {
           success: true,
-          component: <DeviceDataShow data={devices[index]} />,
+          component: <DeviceDataShow data={devices[index]} url={urlData} />,
           nameDevice: devices[index].attributes.id,
         };
       }
@@ -89,55 +91,53 @@ class Dashboard extends Component {
     });
   }
 
+  // Obetener datos del xml probe
   fetchData(url) {
-    const { executeDataRequest } = this.state;
-    if (executeDataRequest) {
-      console.log('loading data...');
-      this.setState({
-        executeDataRequest: false,
-      });
-      Axios.get(url)
-        .then((res) => {
-          console.log('loaded!');
-          const { success, data } = DataParser.getDataJson(res.data);
-          if (success) {
-            const { MTConnectDevices: mtconnectDevices } = data;
-            if (mtconnectDevices) {
-              const componentData = this.getComponentData({ index: 0, data });
-              this.setState({
-                loadingData: false,
-                mtconnectData: data,
-                componentData: componentData.component,
-                nameDevice: componentData.nameDevice ? componentData.nameDevice : '',
-              });
-            }
-          } else {
+    console.log('loading data...');
+    this.setState({
+      executeDataRequest: false,
+    });
+    Axios.get(url)
+      .then((res) => {
+        console.log('loaded!');
+        const { success, data } = DataParser.getDataJson(res.data);
+        if (success) {
+          const { MTConnectDevices: mtconnectDevices } = data;
+          if (mtconnectDevices) {
+            const componentData = this.getComponentData({ index: 0, data });
             this.setState({
               loadingData: false,
-              componentData: <MessageCard
-                header="Error"
-                bg="danger"
-                title="Tipo de datos"
-                icon="exclamation-triangle"
-                message="Error con el formato de datos obtenido"
-              />,
+              mtconnectData: data,
+              componentData: componentData.component,
+              nameDevice: componentData.nameDevice ? componentData.nameDevice : '',
             });
           }
-        })
-        .catch((error) => {
-          console.log(error);
+        } else {
           this.setState({
             loadingData: false,
             componentData: <MessageCard
               header="Error"
               bg="danger"
-              title="Conexión"
+              title="Tipo de datos"
               icon="exclamation-triangle"
-              message={`No se pudo conectar al url suministrado: ${error}`}
+              message="Error con el formato de datos obtenido"
             />,
           });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        this.setState({
+          loadingData: false,
+          componentData: <MessageCard
+            header="Error"
+            bg="danger"
+            title="Conexión"
+            icon="exclamation-triangle"
+            message={`No se pudo conectar al url suministrado: ${error}`}
+          />,
         });
-    }
+      });
   }
 
   handleShowModalConnect() {
@@ -174,23 +174,21 @@ class Dashboard extends Component {
                   <main role="main" className="col ml-2 px-4">
                     <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-1 pb-2 mb-3 border-bottom">
                       <h1 className="h2">
-                        Dispositivo:
-                        &nbsp;
-                        <span className="text-primary">{nameDevice}</span>
+                        Origen de datos:&nbsp;
+                        <span className="badge badge-secondary">{urlData}</span>
                       </h1>
                       <div className="btn-toolbar mb-2 mb-md-0">
                         <div className="btn-group mr-2">
                           <button onClick={this.handleShowModalConnect} type="button" className="btn btn-sm btn-outline-primary py-0">
-                            Conectar
-                            <span> </span>
+                            Conectar&nbsp;
                             <FontAwesomeIcon icon="plus-circle" />
                           </button>
                         </div>
                       </div>
                     </div>
                     <h2>
-                      Datos:&nbsp;
-                      <span className="badge badge-secondary">{urlData}</span>
+                      Dispositivo:&nbsp;
+                      <span className="text-primary">{nameDevice}</span>
                     </h2>
                     { loadingData
                       ? <Loading show /> : null }

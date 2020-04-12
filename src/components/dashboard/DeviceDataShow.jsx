@@ -11,6 +11,7 @@ class DeviceDataShow extends Component {
     super(props);
     this.state = {
       data: props.data,
+      url: props.url,
     };
   }
 
@@ -26,9 +27,9 @@ class DeviceDataShow extends Component {
   }
 
   render() {
-    const { data } = this.state;
+    const { data, url } = this.state;
     return (
-      <DeviceTabs data={data} />
+      <DeviceTabs data={data} url={url} />
     );
   }
 }
@@ -36,11 +37,13 @@ class DeviceDataShow extends Component {
 // Validacion para las los tipos de propiedades
 DeviceDataShow.propTypes = {
   data: PropTypes.oneOfType([PropTypes.object]),
+  url: PropTypes.string,
 };
 
 // Especifica los valores por defecto de props:
 DeviceDataShow.defaultProps = {
   data: null,
+  url: null,
 };
 
 export default DeviceDataShow;

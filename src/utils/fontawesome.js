@@ -22,6 +22,14 @@ import {
   faAngleDown,
 } from '@fortawesome/free-solid-svg-icons';
 
+import {
+  faFolderOpen,
+} from '@fortawesome/free-regular-svg-icons';
+
+import {
+  faReacteurope,
+} from '@fortawesome/free-brands-svg-icons';
+
 library.add(
   faTools,
   faDesktop,
@@ -40,4 +48,6 @@ library.add(
   faSitemap,
   faStream,
   faAngleDown,
+  faFolderOpen,
+  faReacteurope,
 );

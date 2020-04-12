@@ -38,10 +38,10 @@ class DeviceComponents extends Component {
     let componentIndex = index || 0;
     const dataComponent = [
       <div key={componentIndex += 1} className="card-title h5">
+        <hr className="bg-white" />
         <h3 className="mb-0">
           <strong className="badge badge-secondary text-uppercase">{nameComponent}</strong>
         </h3>
-        <hr className="bg-white" />
       </div>,
     ];
     // Obtener los atributos de systems

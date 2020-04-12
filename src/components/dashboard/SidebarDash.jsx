@@ -74,8 +74,8 @@ class SidebarDash extends Component {
   }
 
   /* Esta funcion permite mostrar en el panel principal del dashboar los datos
-     * del dispositivo seleccionado
-    */
+   * del dispositivo seleccionado
+  */
   setComponentData(index) {
     // Esta funcion se carga desde el dasboard por medio de las propiedades del componente
     const { setComponentData } = this.props;

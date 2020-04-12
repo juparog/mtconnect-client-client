@@ -4,6 +4,7 @@ const { gql } = require('apollo-boost');
 const { HttpLink } = require('apollo-link-http');
 const { ApolloLink } = require('apollo-link');
 const { InMemoryCache } = require('apollo-cache-inmemory');
+require('dotenv').config();
 
 // Inicializaciones
 const apiUriDefault = 'http://localhost:4000/graphql';
