@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Mutation } from 'react-apollo';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 // Componentes
 import Flash from 'Components/utilities/Flash';
@@ -117,13 +118,17 @@ class Login extends Component {
                   >
                     <div className="input-group form-group">
                       <div className="input-group-prepend">
-                        <span className="input-group-text"><i className="fas fa-user" /></span>
+                        <span className="input-group-text">
+                          <FontAwesomeIcon icon="user" />
+                        </span>
                       </div>
                       <input value={email} onChange={this.handleChange} name="email" type="text" className="form-control" autoComplete="email" placeholder="ejemplo@correo.com" required />
                     </div>
                     <div className="input-group form-group">
                       <div className="input-group-prepend">
-                        <span className="input-group-text"><i className="fas fa-key" /></span>
+                        <span className="input-group-text">
+                          <FontAwesomeIcon icon="key" />
+                        </span>
                       </div>
                       <input value={password} onChange={this.handleChange} name="password" type="password" className="form-control" autoComplete="current-password" placeholder="contraseña" required />
                     </div>

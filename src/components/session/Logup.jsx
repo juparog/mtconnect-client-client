@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Mutation } from 'react-apollo';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 // Componentes
 import Flash from 'Components/utilities/Flash';
@@ -111,7 +112,7 @@ class Logup extends Component {
                     <div className="input-group form-group">
                       <div className="input-group-prepend">
                         <span className="input-group-text">
-                          <i className="fas fa-user" />
+                          <FontAwesomeIcon icon="user" />
                         </span>
                       </div>
                       <input value={firstName} onChange={this.handleChange} name="firstName" type="text" className="form-control" autoComplete="first-name" placeholder="Nombre" required />
@@ -119,7 +120,7 @@ class Logup extends Component {
                     <div className="input-group form-group">
                       <div className="input-group-prepend">
                         <span className="input-group-text">
-                          <i className="fas fa-user" />
+                          <FontAwesomeIcon icon="user" />
                         </span>
                       </div>
                       <input value={lastName} onChange={this.handleChange} name="lastName" type="text" className="form-control" autoComplete="last-name" placeholder="Apellido" required />
@@ -127,7 +128,7 @@ class Logup extends Component {
                     <div className="input-group form-group">
                       <div className="input-group-prepend">
                         <span className="input-group-text">
-                          <i className="fas fa-user" />
+                          <FontAwesomeIcon icon="user" />
                         </span>
                       </div>
                       <input value={username} onChange={this.handleChange} name="username" type="text" className="form-control" autoComplete="username" placeholder="Nombre de usuario" required />
@@ -135,7 +136,7 @@ class Logup extends Component {
                     <div className="input-group form-group">
                       <div className="input-group-prepend">
                         <span className="input-group-text">
-                          <i className="fas fa-envelope" />
+                          <FontAwesomeIcon icon="envelope" />
                         </span>
                       </div>
                       <input value={email} onChange={this.handleChange} name="email" type="text" className="form-control" autoComplete="email" placeholder="ejemplo@correo.com" required />
@@ -143,7 +144,7 @@ class Logup extends Component {
                     <div className="input-group form-group">
                       <div className="input-group-prepend">
                         <span className="input-group-text">
-                          <i className="fas fa-lock" />
+                          <FontAwesomeIcon icon="lock" />
                         </span>
                       </div>
                       <input value={password} onChange={this.handleChange} name="password" type="password" className="form-control" autoComplete="password" placeholder="Contraseña" required />

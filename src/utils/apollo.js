@@ -1,14 +1,13 @@
 // Dependencias
-const { ApolloClient } = require('apollo-client');
-const { gql } = require('apollo-boost');
-const { HttpLink } = require('apollo-link-http');
-const { ApolloLink } = require('apollo-link');
-const { InMemoryCache } = require('apollo-cache-inmemory');
-require('dotenv').config();
+import { ApolloClient } from 'apollo-client';
+import { gql } from 'apollo-boost';
+import { HttpLink } from 'apollo-link-http';
+import { ApolloLink } from 'apollo-link';
+import { InMemoryCache } from 'apollo-cache-inmemory';
 
 // Inicializaciones
-const apiUriDefault = 'http://localhost:4000/graphql';
-const httpLink = new HttpLink({ uri: process.env.API_URI || apiUriDefault });
+const defaultApiUri = 'http://localhost:4000/graphql';
+const httpLink = new HttpLink({ uri: process.env['apiUri'] || defaultApiUri });
 
 // Middlewares
 const authMiddleware = new ApolloLink((operation, forward) => {
@@ -55,5 +54,5 @@ client.query({
   console.error('Api graphql no conectada. error: ', error);
 });
 
-// Exportacion del modulo
-exports.client = client;
+// Exportacion del cliente
+export default client;

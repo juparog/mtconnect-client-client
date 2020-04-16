@@ -20,6 +20,10 @@ import {
   faSitemap,
   faStream,
   faAngleDown,
+  faUser,
+  faEnvelope,
+  faLock,
+  faKey,
 } from '@fortawesome/free-solid-svg-icons';
 
 import {
@@ -50,4 +54,8 @@ library.add(
   faAngleDown,
   faFolderOpen,
   faReacteurope,
+  faUser,
+  faEnvelope,
+  faLock,
+  faKey,
 );
