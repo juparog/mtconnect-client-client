@@ -1,10 +1,10 @@
-// Dependencias
 import React, { PureComponent } from 'react';
 
-// Recursos
 import logo from '../../../public/logo.png';
 
-// Clase para el componente footer
+/**
+ * Componente footer para la pagina principal
+ */
 class FooterHome extends PureComponent {
   render() {
     return (

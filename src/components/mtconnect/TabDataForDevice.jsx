@@ -1,30 +1,52 @@
-// Dependencias
 import React, { Component } from 'react';
+
 import PropTypes from 'prop-types';
 
-// Componentes
-import AttrTableVertical from 'Components/mtconnect/AttrTableVertical';
-import AttrTableHorizontal from 'Components/mtconnect/AttrTableHorizontal';
-import DescriptionDevice from 'Components/mtconnect/DescriptionDevice';
-import DeviceComponents from 'Components/mtconnect/DeviceComponents';
+import DescriptionDevice from '~/components/mtconnect/DescriptionDevice';
+import DeviceComponents from '~/components/mtconnect/DeviceComponents';
+import Generate from '~/mtconnect/generate';
 
-/*
-    Generalos datos para las pestañas de datos para el dispositivo, se definieron 4 pestañas
-    por defecto que generan titulo modificado según la sentencia CASE, por defecto si no hay
-    concidencias se da como titulo a la pestaña el nombre del nodo.
-    La funcion retorna un un componete con los datos para la pestaña
-*/
+/**
+ * Genera un componente con los datos para las pestañas: attributes, Description
+ * DataItems y Components.
+ *
+ * @prop {String} property Clave o nombre de la pestaña para generar los datos.
+ * @prop {Object} data Datos para generar el compoenete.
+ */
 class TabDataForDevice extends Component {
-  // Contruye un componente de datos dependiendo de la property
-  static buildComponent(property, data) {
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: props.data,
+      property: props.property,
+    };
+    this.buildComponent = this.buildComponent.bind(this);
+  }
+
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    const { data, property } = this.state;
+    if (nextProps.data !== data) {
+      this.setState({
+        data: nextProps.data,
+      });
+    }
+    if (nextProps.property !== property) {
+      this.setState({
+        property: nextProps.property,
+      });
+    }
+  }
+
+  /**
+   * Se encarga de generar el componente segun una sentecia switch case
+   * y el parametro property.
+   */
+  buildComponent() {
+    const { property, data } = this.state;
     if (property) {
       switch (property.toString()) {
         case 'attributes':
-          return (
-            <AttrTableHorizontal
-              data={data}
-            />
-          );
+          return Generate.attributesTable(data);
         case 'Description':
           return (
             <DescriptionDevice
@@ -32,17 +54,10 @@ class TabDataForDevice extends Component {
             />
           );
         case 'DataItems':
-          return (
-            <AttrTableVertical
-              data={data.DataItem}
-              options={{
-                headers: [
-                  { id: 'id', text: 'Id' },
-                  { id: 'type', text: 'Tipo' },
-                  { id: 'category', text: 'Categoría' },
-                ],
-              }}
-            />
+          return Generate.dataItemTable(
+            data.DataItem ? (data.DataItem) : null,
+            null,
+            null,
           );
         case 'Components':
           return (
@@ -67,37 +82,12 @@ class TabDataForDevice extends Component {
     );
   }
 
-  // Contructor de la clase
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: props.data,
-      property: props.property,
-    };
-  }
-
-  // Funcion del ciclo de vida del componente para actualizar el estado
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    const { data: nextData, property: nextProperty } = nextProps;
-    const { data, property } = this.state;
-    if (nextData !== data) {
-      this.setState({
-        data: nextData,
-      });
-    }
-    if (nextProperty !== property) {
-      this.setState({
-        property: nextProperty,
-      });
-    }
-  }
-
   render() {
-    const { data, property } = this.state;
+    const { data } = this.state;
     return (
       <>
         { data
-          ? TabDataForDevice.buildComponent(property, data)
+          ? this.buildComponent()
           : (
             <p>
               Se debe cargar una data para que el componente
@@ -110,13 +100,11 @@ class TabDataForDevice extends Component {
   }
 }
 
-// Validacion para las los tipos de propiedades
 TabDataForDevice.propTypes = {
   data: PropTypes.oneOfType([PropTypes.object]),
   property: PropTypes.string,
 };
 
-// Especifica los valores por defecto de props:
 TabDataForDevice.defaultProps = {
   data: {},
   property: 'propiedad por defecto',

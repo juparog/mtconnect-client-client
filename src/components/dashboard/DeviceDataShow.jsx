@@ -1,11 +1,18 @@
 // Dependencias
 import React, { Component } from 'react';
+
 import PropTypes from 'prop-types';
 
-// Componentes
-import DeviceTabs from 'Components/mtconnect/DeviceTabs';
+import DeviceTabs from '~/components/mtconnect/DeviceTabs';
 
-// Clase para mostrar los datos en el panel principal de la vista dashboard
+/**
+ * Este componete se carga como el componente main del dashboar
+ * por ahora solo carga un compnete DeviceTabs que carga la informacion
+ * del dispositivo conectado
+ *
+ * @prop {Object} data Datos del dispositivo en fomato json
+ * @prop {String} url Direccion para solicitar datos
+ */
 class DeviceDataShow extends Component {
   constructor(props) {
     super(props);
@@ -15,13 +22,11 @@ class DeviceDataShow extends Component {
     };
   }
 
-  // Funcion del ciclo de vida del componente para actualizar el estado
   UNSAFE_componentWillReceiveProps(nextProps) {
-    const { data: nextData } = nextProps;
     const { data } = this.state;
-    if (nextData !== data) {
+    if (nextProps.data !== data) {
       this.setState({
-        data: nextData,
+        data: nextProps.data,
       });
     }
   }
@@ -34,13 +39,11 @@ class DeviceDataShow extends Component {
   }
 }
 
-// Validacion para las los tipos de propiedades
 DeviceDataShow.propTypes = {
   data: PropTypes.oneOfType([PropTypes.object]),
   url: PropTypes.string,
 };
 
-// Especifica los valores por defecto de props:
 DeviceDataShow.defaultProps = {
   data: null,
   url: null,

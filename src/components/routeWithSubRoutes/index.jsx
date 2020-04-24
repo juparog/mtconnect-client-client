@@ -1,11 +1,12 @@
-// Dependencias
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
 
-/* Funcion encargada de devolver las rutan con los componentes segun
- * un objeto de rutas ingresado como parametro
-*/
-
+/**
+ * Este componete se encarga de crear un Router componete
+ * de react-router-dom a partir de las propiedades ingresadas
+ *
+ * @prop {Object} props Las opciones para el componente Router
+ */
 class RouteWithSubRoutes extends Component {
   constructor(props) {
     super(props);
@@ -14,7 +15,6 @@ class RouteWithSubRoutes extends Component {
     };
   }
 
-  // Funcion del ciclo de vida del componente para actualizar sus propiedades
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps !== this.state) {
       this.setState({
@@ -28,7 +28,6 @@ class RouteWithSubRoutes extends Component {
     return (
       <Route
         path={route.path}
-        // retorna un componente, aqui se pueden añadir las props para cada componente
         render={(props) => (
           <route.component
             {...props}

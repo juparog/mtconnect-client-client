@@ -1,19 +1,43 @@
-// Dependencias
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Card } from 'react-bootstrap';
 
-// Componentes
-import AttrTableHorizontal from 'Components/mtconnect/AttrTableHorizontal';
+import PropTypes from 'prop-types';
 
-// Obtener la descripcion de un dispositivo
+import Generate from '~/mtconnect/generate';
+
+/**
+ * Genera un componente con la descripcion de un dispositivo.
+ *
+ * @param {Object} data Los datos para generar la descripción.
+ */
 class DescriptionDevice extends Component {
-  // Construye el componente para la descripcion
-  static buildComponent(data) {
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: props.data,
+    };
+    this.buildDescription = this.buildDescription.bind(this);
+  }
+
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    const { data } = this.state;
+    if (nextProps.data !== data) {
+      this.setState({
+        data: nextProps.data,
+      });
+    }
+  }
+
+  /**
+   * Genera un componente con la descripcion
+   *
+   * @returns {Component} Un componente con la descripción
+   */
+  buildDescription() {
+    const { data } = this.state;
     const component = [];
-    let index = 0;
     component.push(
-      <Card key={index += 1} bg="primary" className="mb-3">
+      <Card key={component.length} bg="primary" className="mb-3">
         <Card.Body>
           <Card.Title>Descripcion:</Card.Title>
           <Card.Text>
@@ -22,34 +46,12 @@ class DescriptionDevice extends Component {
         </Card.Body>
       </Card>,
     );
-    if (data.attributes) {
-      component.push(
-        <AttrTableHorizontal
-          key={index += 1}
-          data={data.attributes}
-        />,
-      );
-    }
+    component.push(
+      <div key={component.length}>
+        {Generate.attributesTable(data.attributes)}
+      </div>,
+    );
     return component;
-  }
-
-  // Constructor
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: props.data,
-    };
-  }
-
-  // Funcion del ciclo de vida del componente para actualizar el estado
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    const { data: nextData } = nextProps;
-    const { data } = this.state;
-    if (nextData !== data) {
-      this.setState({
-        data: nextData,
-      });
-    }
   }
 
   render() {
@@ -57,7 +59,7 @@ class DescriptionDevice extends Component {
     return (
       <>
         { data
-          ? DescriptionDevice.buildComponent(data)
+          ? this.buildDescription()
           : (
             <p>
               Se debe cargar una data para que el componente
@@ -70,12 +72,10 @@ class DescriptionDevice extends Component {
   }
 }
 
-// Validacion para las los tipos de propiedades
 DescriptionDevice.propTypes = {
   data: PropTypes.oneOfType([PropTypes.object]),
 };
 
-// Especifica los valores por defecto de props:
 DescriptionDevice.defaultProps = {
   data: {},
 };

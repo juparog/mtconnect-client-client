@@ -1,148 +1,77 @@
-// Dependencias
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { Tabs, Tab, Card } from 'react-bootstrap';
+import { Tabs } from 'react-bootstrap';
 import ReactJson from 'react-json-view';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-// Componentes
-import TabDataForDevice from 'Components/mtconnect/TabDataForDevice';
-import XmlDataTab from 'Components/mtconnect/XmlDataTab';
+import PropTypes from 'prop-types';
 
-/*
-    Genera el componente de pestañas para los datos del dispositivo.
-*/
+import TabDataForDevice from '~/components/mtconnect/TabDataForDevice';
+import XmlDataTab from '~/components/mtconnect/XmlDataTab';
+import Generate from '~/mtconnect/generate';
+
+/**
+ * Genera el componente de pestañas para mostrar los datos
+ * del dispositivo seleccionado.
+ *
+ * @prop {Object} data Obcjeto con los datos del dispositivo a mostar
+ * @prop {String} url Direccion para solicitar datos
+ */
 class DeviceTabs extends Component {
-  // Contrucciond del componente de pestañas
+  /**
+   * Esta funcion retorna el componente de pestañas con los respestivos datos
+   * de cada una.
+   *
+   * @param {Object} data Datos en formato json para crear las pestañas
+   * @param {String} url Direccion del origen de datos
+   * @returns {Array} Resultado de la operación
+   */
   static buildComponent(data, url) {
     const tabs = [];
     if (data) {
-      const keys = Object.keys(data);
-      const values = Object.values(data);
-      const lengthArrayKeys = keys.length;
-      for (let index = 0; index < lengthArrayKeys; index += 1) {
-        const titleTab = DeviceTabs.getTitleTab(keys[index], data);
+      Object.entries(data).forEach((element, index) => {
         tabs.push(
-          <Tab key={index + 1} eventKey={index} title={titleTab}>
-            <Card className="bg-primary text-white">
-              <Card.Body>
-                <TabDataForDevice
-                  data={values[index]}
-                  property={keys[index]}
-                />
-              </Card.Body>
-            </Card>
-          </Tab>,
+          Generate.tabFrame(
+            <TabDataForDevice data={element[1]} property={element[0]} />,
+            Generate.tabTitle(element[0]),
+            index.toString(),
+          ),
+        );
+      });
+      if (tabs.length) {
+        tabs.push(
+          Generate.tabFrame(
+            <ReactJson src={data} theme="monokai" />,
+            Generate.tabTitle('DataViwer'),
+            tabs.length,
+          ),
+        );
+        tabs.push(
+          Generate.tabFrame(
+            <XmlDataTab url={`${url}/current`} nameDevice={data.attributes.name} />,
+            Generate.tabTitle('CurrentData'),
+            tabs.length,
+          ),
+        );
+        tabs.push(
+          Generate.tabFrame(
+            <XmlDataTab url={`${url}/sample`} nameDevice={data.attributes.name} />,
+            Generate.tabTitle('SampleData'),
+            tabs.length,
+          ),
         );
       }
     }
     if (!tabs.length) {
       tabs.push(
-        <Tab eventKey="0" title="No disponible">
-          <Card bg="danger">
-            <Card.Body>
-              <Card.Title>Sin datos</Card.Title>
-              <Card.Text>
-                Este dispositivo no tiene datos para mostrar
-              </Card.Text>
-            </Card.Body>
-          </Card>
-        </Tab>,
-      );
-    } else {
-      let indexTab = tabs.length;
-      const titleViewerDataTab = (
-        <>
-          <FontAwesomeIcon icon="sitemap" size="lg" />
-          &nbsp;Visor de datos
-        </>
-      );
-      tabs.push(
-        <Tab key={indexTab += 1} eventKey={indexTab} title={titleViewerDataTab}>
-          <Card className="bg-primary text-white">
-            <Card.Body>
-              <ReactJson src={data} theme="monokai" />
-            </Card.Body>
-          </Card>
-        </Tab>,
-      );
-      const titleCurrentTab = (
-        <>
-          <FontAwesomeIcon icon="stream" size="lg" />
-          &nbsp;XML current
-        </>
-      );
-      tabs.push(
-        <Tab key={indexTab += 1} eventKey={indexTab} title={titleCurrentTab}>
-          <Card className="bg-primary text-white">
-            <Card.Body>
-              <XmlDataTab url={`${url}/current`} nameDevice={data.attributes.name} />
-            </Card.Body>
-          </Card>
-        </Tab>,
-      );
-      const titleSampleTab = (
-        <>
-          <FontAwesomeIcon icon="stream" size="lg" />
-          &nbsp;XML sample
-        </>
-      );
-      tabs.push(
-        <Tab key={indexTab += 1} eventKey={indexTab} title={titleSampleTab}>
-          <Card className="bg-primary text-white">
-            <Card.Body>
-              <XmlDataTab url={`${url}/sample`} nameDevice={data.attributes.name} />
-            </Card.Body>
-          </Card>
-        </Tab>,
+        Generate.tabFrame(
+          'Este dispositivo no tiene datos para mostrar',
+          'No disponible',
+          tabs.length,
+        ),
       );
     }
     return tabs;
   }
 
-  static getTitleTab(key) {
-    let title = 'titulo por defecto';
-    switch (key.toString()) {
-      case 'attributes':
-        title = (
-          <span>
-            <FontAwesomeIcon icon="cogs" size="lg" />
-            &nbsp;Atributos
-          </span>
-        );
-        break;
-      case 'Description':
-        title = (
-          <span>
-            <FontAwesomeIcon icon="align-justify" size="lg" />
-            &nbsp;Descripción
-          </span>
-        );
-        break;
-      case 'DataItems':
-        title = (
-          <span>
-            <FontAwesomeIcon icon="th" size="lg" />
-            &nbsp;Elementos de datos
-          </span>
-        );
-        break;
-      case 'Components':
-        title = (
-          <span>
-            <FontAwesomeIcon icon="boxes" size="lg" />
-            &nbsp;Componentes
-          </span>
-        );
-        break;
-      default:
-        title = key;
-        break;
-    }
-    return title;
-  }
-
-  // Contructor de la clase
   constructor(props) {
     super(props);
     this.state = {
@@ -151,13 +80,11 @@ class DeviceTabs extends Component {
     };
   }
 
-  // Funcion del ciclo de vida del componente para actualizar el estado
   UNSAFE_componentWillReceiveProps(nextProps) {
-    const { data: nextData } = nextProps;
     const { data } = this.state;
-    if (nextData !== data) {
+    if (nextProps.data !== data) {
       this.setState({
-        data: nextData,
+        data: nextProps.data,
       });
     }
   }
@@ -184,13 +111,11 @@ class DeviceTabs extends Component {
   }
 }
 
-// Validacion para las los tipos de propiedades
 DeviceTabs.propTypes = {
   data: PropTypes.oneOfType([PropTypes.object]),
   url: PropTypes.string,
 };
 
-// Especifica los valores por defecto de props:
 DeviceTabs.defaultProps = {
   data: {},
   url: null,

@@ -1,19 +1,18 @@
-// Dependencias
 import React, { PureComponent } from 'react';
 import { Switch } from 'react-router-dom';
 
-// Componentes
-import RouteWithSubRoutes from 'Components/routeWithSubRoutes/RouteWithSubRoutes';
+import RouteWithSubRoutes from '~/components/routeWithSubRoutes/';
+import SessionRoutes from '~/routes/session';
 
-// Rutas para sesion
-import SessionRoutes from 'Routes/session';
 
-// Clase para egnerar el componente contenedor del las vistas de sesion
+/**
+ * Componente contenedor para las vista de sesión
+ * (login, logup).
+ */
 class Session extends PureComponent {
   render() {
     return (
       <>
-        {/* Se renderiza un componete dependiendo de la ruta */}
         <Switch>
           {SessionRoutes.map((route, index) => (
             <RouteWithSubRoutes key={index.toString()} {...route} />
@@ -24,5 +23,4 @@ class Session extends PureComponent {
   }
 }
 
-// esportacion del componente
 export default Session;

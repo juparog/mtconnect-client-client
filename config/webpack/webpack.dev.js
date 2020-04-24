@@ -15,10 +15,10 @@ const webpackConfig ={
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        use: [
-          'babel-loader',
-          // 'eslint-loader',
-        ],
+        loader: 'eslint-loader',
+        options: {
+          fix: true,
+        },
       },
     ]
   },

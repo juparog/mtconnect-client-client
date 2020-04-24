@@ -1,9 +1,18 @@
-// Dependencias
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Card, Row, Col } from 'react-bootstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import PropTypes from 'prop-types';
+
+/**
+ * Componente que genera un mensaje en foma de tarjeta
+ *
+ * @prop {String} icon String para generar un icono con FontAwesome
+ * @prop {String} bg String para seleccionar el color de la tarjeta
+ * @prop {String} header String para escribir en la cabecera del mensaje
+ * @prop {String} title String para poner como titulo del mensaje
+ * @prop {String} message String para poner como cuerpo del mensaje
+ */
 class MessageCard extends Component {
   constructor(props) {
     super(props);
@@ -39,7 +48,6 @@ class MessageCard extends Component {
   }
 }
 
-// Validacion para las los tipos de propiedades
 MessageCard.propTypes = {
   icon: PropTypes.string,
   bg: PropTypes.string,
@@ -48,7 +56,6 @@ MessageCard.propTypes = {
   message: PropTypes.string,
 };
 
-// Especifica los valores por defecto de props:
 MessageCard.defaultProps = {
   icon: 'exclamation-circle',
   bg: 'primary',

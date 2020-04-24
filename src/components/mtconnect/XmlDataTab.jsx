@@ -1,24 +1,25 @@
-// Dependencias
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import Axios from 'axios';
 import { Card } from 'react-bootstrap';
 
-// Componentes
-import AttrTableVertical from 'Components/mtconnect/AttrTableVertical';
+import Axios from 'axios';
+import PropTypes from 'prop-types';
 
-// Analizador de datos con fomato MTConnect
-import DataParser from 'MTConnect/dataParser';
+import AttrTableVertical from '~/components/mtconnect/AttrTableVertical';
+import Loading from '~/components/utils/Loading';
+import DataParser from '~/mtconnect/dataParser';
+import Generate from '~/mtconnect/generate';
 
-/*
-  Genera el componente de
-*/
+/**
+ * Genera el componente con los datos provenientes del xml sample ó current.
+ *
+ * @param {String} url Direccion para solicitar los dadtos
+ * @param {String} nameDevice Nombre del dispositivo para el cual se mostraran los datos
+ */
 class XmlDataTab extends Component {
-  // Contructor de la clase
   constructor(props) {
     super(props);
     this.state = {
-      dataTab: <>default data</>,
+      dataTab: (<Loading show />),
       url: props.url,
       nameDevice: props.nameDevice,
     };
@@ -26,205 +27,183 @@ class XmlDataTab extends Component {
   }
 
   componentDidMount() {
+    // Se carga la funcion que solicitara los datos periodicamente
     this.timerID = setInterval(
       () => this.fetchData(),
+      // Tiempo para solicitar los datos en segundos
       1000,
     );
   }
 
-  // Funcion del ciclo de vida del componente para actualizar el estado
   UNSAFE_componentWillReceiveProps(nextProps) {
-    const { url: nextUrl, nameDevice: nextNameDevice } = nextProps;
     const { url, nameDevice } = this.state;
-    if (nextUrl !== url) {
+    if (nextProps.url !== url) {
       this.setState({
-        url: nextUrl,
+        url: nextProps.url,
       });
     }
-    if (nextNameDevice !== nameDevice) {
+    if (nextProps.nameDevice !== nameDevice) {
       this.setState({
-        nameDevice: nextNameDevice,
+        nameDevice: nextProps.nameDevice,
       });
     }
   }
 
   componentWillUnmount() {
+    // Limpia la solicitud de datos periodica al desmontar el componente
     clearInterval(this.timerID);
-    console.log('búsqueda de datos en tiempo real finalizada!');
   }
 
+  /**
+   * Hace un asolicitud de datos
+   *
+   * @param {String} url Direccion para solicitar los datos
+   */
   fetchData() {
     const { url } = this.state;
     if (url) {
       Axios.get(url)
         .then((res) => {
-          const { success, data } = DataParser.getDataJson(res.data);
-          if (success) {
-            const { MTConnectStreams: mtconnectStreams } = data;
-            if (mtconnectStreams) {
-              const { Header: header } = mtconnectStreams;
-              const { success: success2, deviceStream } = DataParser.getStream(mtconnectStreams);
-              if (success2) {
-                const { attributes: attr } = header;
-                const listItem = [];
-                Object.keys(attr).forEach((key) => listItem.push(
-                  <li key={key}>
-                    <span>
-                      {key}
-                      :&nbsp;
-                    </span>
-                    <strong>{attr[key]}</strong>
-                  </li>,
-                ));
-                const date = new Date().toLocaleDateString();
-                const time = new Date().toLocaleTimeString();
-                const dataTab = [
-                  <div key="1" className="mb-3">
-                    <strong className="h6">Header:</strong>
-                    <Card bg="primary" className="mb-3">
-                      <Card.Body>
-                        <ul className="mb-0">
-                          <li>
-                            <span>url:&nbsp;</span>
-                            <strong>{url}</strong>
-                          </li>
-                          <li>
-                            <span>Fecha:&nbsp;</span>
-                            <strong>{date}</strong>
-                            <span>&nbsp;Hora:&nbsp;</span>
-                            <strong>{time}</strong>
-                          </li>
-                          {listItem}
-                        </ul>
-                      </Card.Body>
-                    </Card>
+          const dataJson = DataParser.getDataJson(res.data);
+          if (dataJson != null) {
+            const deviceStream = DataParser.getStream(dataJson.MTConnectStreams);
+            if (deviceStream.length) {
+              // Construir el Header
+              const dataTab = [
+                Generate.dataHeader(url, dataJson.MTConnectStreams.Header.attributes),
+              ];
+              // Buscar el dispositivo para el cual se mostraran los datos
+              const { nameDevice } = this.state;
+              const device = deviceStream.find((element) => (
+                element.attributes.name === nameDevice
+              ));
+              if (device) {
+                // Construir la tabla atributos
+                dataTab.push(
+                  <div key="2">
+                    <strong className="h6">Atributos:</strong>
+                    <AttrTableVertical
+                      data={device}
+                      options={{
+                        headers: [
+                          { id: 'name', text: 'Nombre' },
+                          { id: 'uuid', text: 'UUID' },
+                        ],
+                      }}
+                    />
                   </div>,
-                ];
-                const { nameDevice } = this.state;
-                const device = deviceStream.find((element) => (
-                  element.attributes.name === nameDevice
-                ));
-                if (device) {
-                  dataTab.push(
-                    <div key="2">
-                      <strong className="h6">Atributos:</strong>
-                      <AttrTableVertical
-                        data={device}
-                        options={{
-                          headers: [
-                            { id: 'name', text: 'Nombre' },
-                            { id: 'uuid', text: 'UUID' },
-                          ],
-                        }}
-                      />
-                    </div>,
-                  );
-                  const { ComponentStream: componentStream } = device;
-                  if (componentStream.length) {
-                    // ciclo para recorrer los ComponentStream
-                    componentStream.forEach((component, index) => {
-                      const keys = Object.keys(component);
-                      const values = Object.values(component);
-                      const lengthArrayKeys = keys.length;
-                      const componentData = [];
-                      // ciclo para recorrer los items del ComponentStream
-                      for (let index2 = 0; index2 < lengthArrayKeys; index2 += 1) {
-                        if (keys[index2] === 'attributes') {
-                          componentData.push(
-                            <div key={index2.toString()} className="card-title h5">
-                              <hr className="bg-white" />
-                              <div className="badge badge-secondary">
-                                <p className="h4 mb-0 text-uppercase text-wrap text-left">
-                                  <strong>
-                                    {values[index2].component}
-                                    &nbsp;:&nbsp;
-                                    {values[index2].name}
-                                  </strong>
-                                </p>
-                                <p className="h6 mb-0 text-uppercase text-wrap text-left">
-                                  <strong>
-                                    UUID:&nbsp;
-                                    {values[index2].componentId}
-                                  </strong>
-                                </p>
-                              </div>
-                            </div>,
-                          );
-                        } else {
-                          const keys2 = Object.keys(values[index2]);
-                          const values2 = Object.values(values[index2]);
-                          const lengthArrayKeys2 = keys2.length;
-                          const itemData = [];
-                          // ciclo para crear filas de la tabla del cada item
-                          for (let index3 = 0; index3 < lengthArrayKeys2; index3 += 1) {
-                            let items = [];
-                            if (values2[index3].length) {
-                              items = values2[index3];
-                            } else {
-                              items.push(values2[index3]);
-                            }
-                            items.forEach((element) => {
-                              const { attributes, text } = element;
-                              if (attributes) {
-                                attributes.type = keys2[index3];
-                                attributes.value = text;
-                              }
-                              itemData.push({
-                                attributes,
-                              });
-                            });
-                          }
-                          componentData.push(
-                            <div key={index2.toString()}>
-                              <p>
-                                <strong className="h6">
-                                  {keys[index2]}
-                                  :
+                );
+                const { ComponentStream: componentStream } = device;
+                if (componentStream.length) {
+                  // Construir las tablas para cada componente
+                  componentStream.forEach((component, index) => {
+                    // Obteno cada component stream
+                    const componentData = [];
+                    Object.entries(component).forEach((componentElement) => {
+                      /**
+                       * Obtengo cada elemento del componente,
+                       * ejemplo: Events, Conditions, Sample, attributes...
+                       */
+                      if (componentElement[0] === 'attributes') {
+                        /**
+                         * Se genera un un div de tipo badge-bootstrap con los datos
+                         * que identifican al componente y que estan en el elemento de
+                         * tipo attributes.
+                         */
+                        componentData.push(
+                          <div key={componentData.length.toString()} className="card-title h5">
+                            <hr className="bg-white" />
+                            <div className="badge badge-secondary">
+                              <p className="h4 mb-0 text-uppercase text-wrap text-left">
+                                <strong>
+                                  {componentElement[1].component}
+                                  &nbsp;:&nbsp;
+                                  {componentElement[1].name}
                                 </strong>
                               </p>
-                              <AttrTableVertical
-                                data={itemData}
-                                options={{
-                                  tableSize: 'sm',
-                                  headers: [
-                                    { id: 'timestamp', text: 'Timestamp' },
-                                    { id: 'dataItemId', text: 'Id' },
-                                    { id: 'name', text: 'Nombre' },
-                                    { id: 'type', text: 'Tipo' },
-                                    { id: 'subType', text: 'Sub-tipo' },
-                                    { id: 'sequence', text: 'Secuencia' },
-                                    { id: 'value', text: 'Valor' },
-                                  ],
-                                }}
-                              />
-                            </div>,
-                          );
-                        }
+                              <p className="h6 mb-0 text-uppercase text-wrap text-left">
+                                <strong>
+                                  UUID:&nbsp;
+                                  {componentElement[1].componentId}
+                                </strong>
+                              </p>
+                            </div>
+                          </div>,
+                        );
+                      } else {
+                        // Se genera una tabla para los datos del elemento
+                        const tableData = [];
+                        Object.entries(componentElement[1]).forEach((subElements) => {
+                          // Los sub elementos de cada elemento forman las filas de la tabla
+                          let items = [];
+                          if (subElements[1].length) {
+                            items = subElements[1];
+                          } else {
+                            items.push(subElements[1]);
+                          }
+                          items.forEach((obj) => {
+                            const { attributes, text } = obj;
+                            if (attributes) {
+                              attributes.type = subElements[0];
+                              attributes.value = text;
+                            }
+                            tableData.push({
+                              attributes,
+                            });
+                          });
+                        });
+                        componentData.push(
+                          <div key={componentData.length.toString()}>
+                            <p>
+                              <strong className="h6">
+                                {componentElement[0]}
+                                :
+                              </strong>
+                            </p>
+                            <AttrTableVertical
+                              data={tableData}
+                              options={{
+                                tableSize: 'sm',
+                                headers: [
+                                  { id: 'timestamp', text: 'Timestamp' },
+                                  { id: 'dataItemId', text: 'Id' },
+                                  { id: 'name', text: 'Nombre' },
+                                  { id: 'type', text: 'Tipo' },
+                                  { id: 'subType', text: 'Sub-tipo' },
+                                  { id: 'sequence', text: 'Secuencia' },
+                                  { id: 'value', text: 'Valor' },
+                                ],
+                              }}
+                            />
+                          </div>,
+                        );
                       }
-                      dataTab.push(
-                        <div key={(index + 3).toString()}>
-                          {componentData}
-                        </div>,
-                      );
                     });
-                  }
-                } else {
-                  dataTab.push(
-                    <Card key="2" bg="primary" className="mb-3">
-                      <Card.Body>
-                        <strong>
-                          Datos para&nbsp;
-                          {nameDevice}
-                          &nbsp;no disponibles
-                        </strong>
-                      </Card.Body>
-                    </Card>,
-                  );
+                    dataTab.push(
+                      <div key={(index + 3).toString()}>
+                        {componentData}
+                      </div>,
+                    );
+                  });
                 }
-                this.setState({
-                  dataTab,
-                });
+              } else {
+                dataTab.push(
+                  <Card key="2" bg="primary" className="mb-3">
+                    <Card.Body>
+                      <p>
+                        Datos para&nbsp;
+                        <strong>
+                          {nameDevice}
+                        </strong>
+                        &nbsp;no disponibles
+                      </p>
+                    </Card.Body>
+                  </Card>,
+                );
               }
+              this.setState({
+                dataTab,
+              });
             }
           } else {
             this.setState({
@@ -260,13 +239,11 @@ class XmlDataTab extends Component {
   }
 }
 
-// Validacion para las los tipos de propiedades
 XmlDataTab.propTypes = {
   url: PropTypes.string,
   nameDevice: PropTypes.string,
 };
 
-// Especifica los valores por defecto de props:
 XmlDataTab.defaultProps = {
   url: null,
   nameDevice: null,

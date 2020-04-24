@@ -1,69 +1,69 @@
-// Dependencias
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { ListGroup } from 'react-bootstrap';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import PropTypes from 'prop-types';
 
-// Analizador de datos
-import DataParser from 'MTConnect/dataParser';
-
-// Clase para el componente que muestra la vista sidebar en el dashboard
+/**
+ * Componente que muestra la vista sidebar en el dashboard,
+ * en este componente se cargan los dispositivos conectados
+ * encontrados en el origen de datos
+ *
+ * @prop {Object} data Datos con la infomacion de los dispositivos
+ */
 class SidebarDash extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      // propiedad del estado para cargar los datos de los dispositivos
-      data: props.data,
+      devices: props.devices,
     };
-    // Cargar las funciones a la clase
     this.getListGroupItem = this.getListGroupItem.bind(this);
-    this.setComponentData = this.setComponentData.bind(this);
+    this.selectComponentData = this.selectComponentData.bind(this);
   }
 
-  // Funcion del ciclo de vida del componente para actualizar sus propiedades
   UNSAFE_componentWillReceiveProps(nextProps) {
-    const { data: nextData } = nextProps;
     const { data } = this.state;
-    if (nextData !== data) {
+    if (nextProps.devices !== data) {
       this.setState({
-        data: nextData,
+        devices: nextProps.devices,
       });
     }
   }
 
-  // Obtiene los los item para los dispositivos a partir de los datos del estado
+  /**
+   * Obtiene los los item para los dispositivos y los
+   * retorna como un array de ListGroup.Item
+   *
+   * @returns {Array} Un array de componentes react
+   */
   getListGroupItem() {
     const items = [];
     // Se llama al analizador de datos para buscar los dispositivos disponibles
-    const { data } = this.state;
-    const { success, devices } = DataParser.getDevices(data);
-    if (success) {
-      // Se llama al analizador de datos para que retorne los nombre de los dispoditivos
-      const { success: successNames, names } = DataParser.getDeviceNames(devices);
-      if (successNames) {
-        names.forEach((name, index) => {
-          items.push(
-            <ListGroup.Item
-              key={index.toString()}
-              action
-              href={`#${index}`}
-              onClick={() => this.setComponentData(index)}
-            >
-              <FontAwesomeIcon icon="file-import" />
-              &nbsp;
-              { name }
-            </ListGroup.Item>,
-          );
-        });
-      }
+    const { devices } = this.state;
+    if (devices.length) {
+      devices.forEach((device, index) => {
+        items.push(
+          <ListGroup.Item
+            key={index.toString()}
+            action
+            eventKey={index}
+            variant="secondary"
+            onClick={() => this.selectComponentData(index)}
+          >
+            <FontAwesomeIcon icon="file-import" />
+            &nbsp;
+            {device.attributes.name || device.attributes.id || `no_identificado_${index}`}
+          </ListGroup.Item>,
+        );
+      });
     }
     // En el caso de no encontrar dispositivos carga este item
     if (!items.length) {
       items.push(
         <ListGroup.Item
-          key={0}
+          key="0"
           action
-          href="#0"
+          eventKey="0"
         >
           <FontAwesomeIcon icon="file-excel" />
           &nbsp;Sin dispositivos
@@ -73,33 +73,39 @@ class SidebarDash extends Component {
     return items;
   }
 
-  /* Esta funcion permite mostrar en el panel principal del dashboar los datos
-   * del dispositivo seleccionado
-  */
-  setComponentData(index) {
-    // Esta funcion se carga desde el dasboard por medio de las propiedades del componente
-    const { setComponentData } = this.props;
-    setComponentData({ index });
+  /**
+   * Permite pasar index del item seleccionado en
+   * el ListGroup al componente padre
+   *
+   * @param {Integer} index Itemseleccionado en el ListGroup
+   */
+  selectComponentData(index) {
+    const { selectComponentData } = this.props;
+    // Esta pasa informacion al componente padre
+    selectComponentData(index);
   }
 
   render() {
-    const { handleShowModalConnect } = this.props;
-    const { data: { Devices: devices } } = this.state;
+    const { showModalConnect } = this.props;
+    const { devices } = this.state;
     return (
       <nav className="col d-none d-md-block bg-light sidebar border-right" style={{ maxWidth: '20%' }}>
         <div className="sidebar-sticky">
           <ul className="nav flex-column">
             <li className="nav-item">
-              <button type="button" onClick={handleShowModalConnect} onKeyDown={handleShowModalConnect} className="nav-link btn btn-outline-primary p-0 mt-2 w-100">
+              <button
+                type="button"
+                onClick={showModalConnect}
+                className="nav-link btn btn-outline-primary p-0 mt-2 w-100"
+              >
                 Conectar&nbsp;
-                <span className="sr-only">(current)</span>
                 <i className="fas fa-plus-circle" />
                 <FontAwesomeIcon icon="plus-circle" />
               </button>
               <hr />
-              { devices
+              {devices.length
                 ? (
-                  <ListGroup as="ul" defaultActiveKey="#0">
+                  <ListGroup as="ul" defaultActiveKey="0">
                     {this.getListGroupItem()}
                   </ListGroup>
                 )
@@ -120,18 +126,16 @@ class SidebarDash extends Component {
   }
 }
 
-// Validacion para las los tipos de propiedades
 SidebarDash.propTypes = {
-  data: PropTypes.oneOfType([PropTypes.object]),
-  handleShowModalConnect: PropTypes.func,
-  setComponentData: PropTypes.func,
+  devices: PropTypes.oneOfType([PropTypes.array]),
+  showModalConnect: PropTypes.func,
+  selectComponentData: PropTypes.func,
 };
 
-// Especifica los valores por defecto de props:
 SidebarDash.defaultProps = {
-  data: null,
-  handleShowModalConnect: () => {},
-  setComponentData: () => {},
+  devices: [],
+  showModalConnect: () => { console.log('funcion para mostar el modal sin asignar'); },
+  selectComponentData: () => { console.log('funcion para asirnar los datos sin asignar'); },
 };
 
 export default SidebarDash;

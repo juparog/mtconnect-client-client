@@ -1,6 +1,7 @@
 // Dependencias
 import React, { PureComponent } from 'react';
 import { Button } from 'react-bootstrap';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 

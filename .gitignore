@@ -12,12 +12,8 @@
 /build
 
 # misc
-.DS_Store
-.env
-.local.env
-/config/.env
-/config/dev.env
-/config/prod.env
+/config/environment/.env.development.json
+/config/environment/.env.production.json
 
 npm-debug.log*
 yarn-debug.log*

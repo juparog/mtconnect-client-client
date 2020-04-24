@@ -1,38 +1,69 @@
-// Dependencias
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Table } from 'react-bootstrap';
 
-/*
-    Obtener una tabla horizontal de atributos a partir de un nodo tipo array json ejemplo:
-    nodo = [ { attr_1='valor 1', attr_2='valor 2'}, { attr_1='valor 3', attr_2='valor 4'}]
-    tabla = | # |  attr_1  |  attr_2  |
-            | 1 |  valor 1 | valor 2  |
-            | 2 |  valor 3 | valor 4  |
-    #, attr_1 y attr_2 son configurables a traves de atributo options de la funcion
-    el # puede ser seccionado si se mostrara o no a traves de las opciones
-    notas: los nodos internos del array deben tener atributos iguales o podrian
-    presentarce inconsistencia en la generacion de la tabla. Los encabezados de la tabla
-    se tomaron del primer nodo del array y se se asignan encabezados por optiones este array
-    se tomaran en el orden ingresado
-*/
+import PropTypes from 'prop-types';
+
+/**
+ * Genera una tabla con datos. ejemplo:
+ *
+ * data = { key1:value1, key2:value2, key3:value3 }
+ * return = | # |  key  |  value |
+ *          | 1 |  key1 | value1 |
+ *          | 2 |  key2 | value2 |
+ *          | 3 |  key3 | value3 |
+ * @prop {Object} data Datos para generar la tabla.
+ * @prop {Object} options Opciones para configurar la tabla.
+ *  {
+ *    @prop {Boolean} showIndex En true hace visible la columna index.
+ *    @prop {String} tableIndex El encabezado para la columna index.
+ *    @prop {String} tableAttr El encabezado para la columna key.
+ *    @prop {String} tableValue El encabezado para la columna value.
+ *  }
+ */
 class AttrTableHorizontal extends Component {
-  // Construye el componente en forma de tabla
-  static buildComponent(data, options) {
-    const rowTable = [];
-    const keys = Object.keys(data);
-    const values = Object.values(data);
-    const lengthData = keys.length;
-    for (let index = 0; index < lengthData; index += 1) {
-      rowTable.push(
-        <tr key={index.toString()}>
-          { options.showIndex ? <td>{ index + 1 }</td> : null }
-          <td>{ keys[index] }</td>
-          <td>{ values[index] }</td>
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: props.data,
+      options: props.options,
+    };
+    this.buildTable = this.buildTable.bind(this);
+  }
+
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    const { data, options } = this.state;
+    if (nextProps.data !== data) {
+      this.setState({
+        data: nextProps.data,
+      });
+    }
+    if (nextProps.options !== options) {
+      this.setState({
+        options: nextProps.options,
+      });
+    }
+  }
+
+  /**
+   * Genera la tabla con los datos.
+   *
+   * @returns {Component} Un componente Table.
+   */
+  buildTable() {
+    const { data, options } = this.state;
+    const rowsTable = [];
+    Object.entries(data).forEach((element) => {
+      rowsTable.push(
+        <tr key={rowsTable.length}>
+          {options.showIndex
+            ? (<td>{ rowsTable.length + 1 }</td>)
+            : null}
+          <td>{ element[0] }</td>
+          <td>{ element[1] }</td>
         </tr>,
       );
-    }
-    if (!rowTable.length) {
+    });
+    if (!rowsTable.length) {
       return (
         <p>
           { options.tableAttr }
@@ -51,43 +82,18 @@ class AttrTableHorizontal extends Component {
           </tr>
         </thead>
         <tbody>
-          { rowTable }
+          { rowsTable }
         </tbody>
       </Table>
     );
   }
 
-  // Constructor de la clase
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: props.data,
-      options: props.options,
-    };
-  }
-
-  // Funcion del ciclo de vida del componente para actualizar el estado
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    const { data: nextData, options: nextOptions } = nextProps;
-    const { data, options } = this.state;
-    if (nextData !== data) {
-      this.setState({
-        data: nextData,
-      });
-    }
-    if (nextOptions !== options) {
-      this.setState({
-        options: nextOptions,
-      });
-    }
-  }
-
   render() {
-    const { data, options } = this.state;
+    const { data } = this.state;
     return (
       <>
         { data
-          ? AttrTableHorizontal.buildComponent(data, options)
+          ? this.buildTable()
           : (
             <p>
               Se debe cargar una data para que el componente
@@ -100,7 +106,6 @@ class AttrTableHorizontal extends Component {
   }
 }
 
-// Validacion para las los tipos de propiedades
 AttrTableHorizontal.propTypes = {
   data: PropTypes.oneOfType([PropTypes.object]),
   options: PropTypes.shape({
@@ -111,7 +116,6 @@ AttrTableHorizontal.propTypes = {
   }),
 };
 
-// Especifica los valores por defecto de props:
 AttrTableHorizontal.defaultProps = {
   data: {},
   options: {

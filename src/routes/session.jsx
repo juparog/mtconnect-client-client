@@ -1,8 +1,8 @@
 // Componentes
-import Login from 'Components/session/Login';
-import Logup from 'Components/session/Logup';
-import Logout from 'Components/session/Logout';
-import NoFoundPage from 'Components/utilities/NoFoundPage';
+import Login from '~/components/session/Login';
+import Logout from '~/components/session/Logout';
+import Logup from '~/components/session/Logup';
+import NoFoundPage from '~/components/utils/NoFoundPage';
 
 // Mapa de las rutas para la vista de sesión
 export default [

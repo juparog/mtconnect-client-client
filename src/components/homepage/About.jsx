@@ -1,9 +1,11 @@
-// Dependencias
 import React, { PureComponent } from 'react';
 import { Link } from 'react-router-dom';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-// Clase para el componente que muestra la vista de about
+/**
+ * Componente para vista about
+ */
 class About extends PureComponent {
   render() {
     return (

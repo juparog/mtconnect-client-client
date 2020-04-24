@@ -1,22 +1,20 @@
-// Dependencias
 import React, { PureComponent } from 'react';
 import {
   Navbar, Nav, Image, Container, NavDropdown,
 } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+
 import { css } from 'aphrodite';
 
-// Recursos
-import Auth from 'Utils/auth';
-import logo from '../../../public/logo.png';
+import Auth from '~/utils/auth';
 
-// Estilos personalizados
+import logo from '../../../public/logo.png';
 import Styles from './styles';
 
-// Autenticacion
-
-// Clase para el componente encargado de mostrar la vista de barra de
-// navegacion en la pagina principal
+/**
+ * Componente encargado de mostrar la barra de
+ * navegacion en la pagina principal
+ */
 class NavbarHome extends PureComponent {
   render() {
     return (
@@ -34,7 +32,7 @@ class NavbarHome extends PureComponent {
               <Link to="/about" className="nav-link">Nosotros</Link>
             </Nav>
             <Nav className="ml-auto">
-              { Auth.userSignedIn() // Verificar si es usuario esta logeado
+              {Auth.userSignedIn()
                 ? (
                   <>
                     <Link to="/dashboard" className="nav-link">Dashboard</Link>

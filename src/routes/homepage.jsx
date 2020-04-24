@@ -1,10 +1,14 @@
-// Componentes
-import Home from 'Components/homepage/Home';
-import Tutorial from 'Components/homepage/Tutorial';
-import About from 'Components/homepage/About';
-import NoFoundPage from 'Components/utilities/NoFoundPage';
+import About from '~/components/homepage/About';
+import Home from '~/components/homepage/Home';
+import Tutorial from '~/components/homepage/Tutorial';
+import NoFoundPage from '~/components/utils/NoFoundPage';
 
-// Mapa de rutas para la pagina principal
+/**
+ * retorna un array con las la configuracion de rutas
+ * para la pagina principales para react-router-dom
+ *
+ * @return {Array} default
+ */
 export default [
   {
     exact: true,

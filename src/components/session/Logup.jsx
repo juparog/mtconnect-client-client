@@ -1,15 +1,12 @@
-// Dependencias
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import { Mutation } from 'react-apollo';
+import { Link } from 'react-router-dom';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import PropTypes from 'prop-types';
 
-// Componentes
-import Flash from 'Components/utilities/Flash';
-
-// Mutaciones para la api
-import { Mutations } from 'Utils/mutations';
+import Flash from '~/components/utils/Flash';
+import { Mutations } from '~/utils/mutations';
 
 // Clase para el componente logup encargado de omstar la vista de registro de usuario
 class Logup extends Component {

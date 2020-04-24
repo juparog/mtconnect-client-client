@@ -1,43 +1,49 @@
-// Dependencias
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Modal, Button, Form } from 'react-bootstrap';
 
-/* Clase para el componente modal que se utiliza para indicar
- * el url de conexion para el origen de datos
+import PropTypes from 'prop-types';
+
+/**
+ * Componente modal para ingresar el url de conexion
+ * para el origen de datos
+ *
+ * @prop {Boolean} show Hace visible el componente
+ * @prop {String} url Direccion para solicitar los datos
+ * @prop {Function} setUrlData Funcion para pasar el url al componente padre
  */
 class ConnectModal extends Component {
   constructor(props) {
     super(props);
-    console.log();
     this.state = {
-      // Propiedades del estado mara gestionar el modal
       show: props.show,
       url: props.url,
     };
-    // Carga de funciones a la clase
     this.handleClose = this.handleClose.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
 
-  // Funcion del ciclo de vida vida del componente para actualizar propiedades
   UNSAFE_componentWillReceiveProps(nextProps) {
-    const { show: nextShow } = nextProps;
     const { show } = this.state;
-    if (nextShow !== show) {
-      this.setState({ show: nextShow });
+    if (nextProps.show !== show) {
+      this.setState({ show: nextProps.show });
     }
   }
 
-  // Funcion para cerrar el cerror el modal
+  /**
+   * Cierra el cerror el modal
+   */
   handleClose() {
     this.setState({
       show: false,
     });
   }
 
-  // Funcion para cargar el url ingresado al estado del componente
+  /**
+   * Cargar el url ingresado al estado del componente
+   *
+   * @param {Object} event Evento proveniente del input
+   */
   handleChange(event) {
     const { target } = event;
     const value = target.type === 'checkbox' ? target.checked : target.value;
@@ -47,10 +53,13 @@ class ConnectModal extends Component {
     });
   }
 
-  // Funcion envia el url al componete padre
+  /**
+   * Pasar el url al componete padre
+   *
+   * @param {Object} event Evento proveniente del boton de tipo submit
+   */
   handleSubmit(event) {
     event.preventDefault();
-    // Esta funcion proviene del componente padre por medio de las propiedades
     const { setUrlData } = this.props;
     const { url } = this.state;
     setUrlData(url);
@@ -87,14 +96,12 @@ class ConnectModal extends Component {
   }
 }
 
-// Validacion para las los tipos de propiedades
 ConnectModal.propTypes = {
   show: PropTypes.bool,
   url: PropTypes.string,
   setUrlData: PropTypes.func,
 };
 
-// Especifica los valores por defecto de props:
 ConnectModal.defaultProps = {
   show: true,
   url: null,

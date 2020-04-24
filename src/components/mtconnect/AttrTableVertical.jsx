@@ -1,44 +1,72 @@
 // Dependencias
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Table } from 'react-bootstrap';
 
-/*
-    Obtener una tabla vertical de atributos a partir de un nodo tipo array json ejemplo:
-    nodo = [ { attr_1='valor 1', attr_2='valor 2'}, { attr_1='valor 3', attr_2='valor 4'}]
-    tabla = | # |  attr_1  |  attr_2  |
-            | 1 |  valor 1 | valor 2  |
-            | 2 |  valor 3 | valor 4  |
-    #, attr_1 y attr_2 son configurables a traves de atributo options de la funcion
-    el # puede ser seccionado si se mostrara o no a traves de las opciones
-    notas: los nodos internos del array deben tener atributos iguales o podrian
-    presentarce inconsistencia en la generacion de la tabla. Los encabezados de la tabla
-    se tomaron del primer nodo del array y se se asignan encabezados por optiones este array
-    se tomaran en el orden ingresado
-*/
+import PropTypes from 'prop-types';
+
+import DataParser from '~/mtconnect/dataParser';
+
+/**
+ * Genera una tabla con datos. ejemplo:
+ *
+ * data = [ { attributes:{key1:value1, key2:value2} },
+ *          { attributes:{key1:value3, key2:value4} },
+ *          { attributes:{key1:value5, key2:value6} } ]
+ * return = | # |   key1  |  key2  |
+ *          | 1 |  value1 | value2 |
+ *          | 2 |  value3 | value4 |
+ *          | 3 |  value5 | value6 |
+ * @prop {Object} data Datos para generar la tabla.
+ * @prop {Object} options Opciones para configurar la tabla
+ *  {
+ *    @prop {Boolean} showIndex En true hace visible la columna index.
+ *    @prop {String} tableIndex El encabezado para la columna index.
+ *    @prop {String} tableSize El encabezado para la columna key.
+ *    @prop {String} headers El encabezado para la columna value.
+ *      Nota: el param headers sirven para modificar los encabezados de las columnas en
+ *      la tabla. ejemplo:
+ *      headers = [ { id: 'key1', text: 'texto para sustituir por key1' },
+ *                  { id: 'key2', text: 'texto para sustituir por key2' } ]
+ */
 class AttrTableVertical extends Component {
-  // Construye el componente en forma de tabla
-  static buildComponent(data, options) {
-    let arrayItems = [];
-    if (data[0]) {
-      arrayItems = data;
-    } else {
-      arrayItems.push(data);
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: props.data,
+      options: props.options,
+    };
+    this.buildTable = this.buildTable.bind(this);
+  }
+
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    const { data, options } = this.state;
+    if (nextProps.data !== data) {
+      this.setState({
+        data: nextProps.data,
+      });
     }
+    if (nextProps.options !== options) {
+      this.setState({
+        options: nextProps.options,
+      });
+    }
+  }
+
+  /**
+   * Genera la tabla con los datos
+   *
+   * @return {Component} Un componente Table
+   */
+  buildTable() {
+    const { data, options } = this.state;
+    const arrayItems = DataParser.arrayFormat(data);
     let { headers } = options;
-    if (headers == null) {
-      const { attributes } = arrayItems[0];
+    if (!headers) {
       headers = [];
-      const keys = Object.keys(attributes);
-      const lengthData = keys.length;
-      for (let index = 0; index < lengthData; index += 1) {
-        headers.push({ id: keys[index].toString(), text: keys[index].toString() });
-      }
+      Object.keys(arrayItems[0]).forEach((key) => {
+        headers.push({ id: key, text: key });
+      });
     }
-    const headersTable = [];
-    headers.forEach((header, index) => {
-      headersTable.push(<th key={index.toString()}>{ header.text }</th>);
-    });
     const rowTable = [];
     const noFoundItem = <span className="text-muted">no disponible</span>;
     arrayItems.forEach((item, index) => {
@@ -48,7 +76,7 @@ class AttrTableVertical extends Component {
         headers.forEach((header, key) => {
           tdRow.push(
             <td key={key.toString()}>
-              { attr[header.id] ? attr[header.id] : noFoundItem }
+              { attr[header.id] || noFoundItem }
             </td>,
           );
         });
@@ -70,7 +98,9 @@ class AttrTableVertical extends Component {
         <thead>
           <tr>
             { options.showIndex ? <th>{ options.tableIndex }</th> : null }
-            { headersTable }
+            {headers.forEach((header, index) => (
+              <th key={index.toString()}>{ header.text }</th>
+            ))}
           </tr>
         </thead>
         <tbody>
@@ -80,37 +110,12 @@ class AttrTableVertical extends Component {
     );
   }
 
-  // Contructor de la clase
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: props.data,
-      options: props.options,
-    };
-  }
-
-  // Funcion del ciclo de vida del componente para actualizar el estado
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    const { data: nextData, options: nextOptions } = nextProps;
-    const { data, options } = this.state;
-    if (nextData !== data) {
-      this.setState({
-        data: nextData,
-      });
-    }
-    if (nextOptions !== options) {
-      this.setState({
-        options: nextOptions,
-      });
-    }
-  }
-
   render() {
-    const { data, options } = this.state;
+    const { data } = this.state;
     return (
       <>
         { data
-          ? AttrTableVertical.buildComponent(data, options)
+          ? this.buildTable()
           : (
             <p>
               Se debe cargar una data para que el componente
@@ -123,7 +128,6 @@ class AttrTableVertical extends Component {
   }
 }
 
-// Validacion para las los tipos de propiedades
 AttrTableVertical.propTypes = {
   data: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
   options: PropTypes.shape({
@@ -134,7 +138,6 @@ AttrTableVertical.propTypes = {
   }),
 };
 
-// Especifica los valores por defecto de props:
 AttrTableVertical.defaultProps = {
   data: {},
   options: {

@@ -1,20 +1,25 @@
-// Dependencias
-const JWT = require('jsonwebtoken');
+import JWT from 'jsonwebtoken';
 
-// Funcion para verificar si un usuario se encuentra logueado
-const userSignedIn = () => {
-  const token = localStorage.getItem('token');
-  let isValid = false;
-  if (token) {
-    try {
-      if (JWT.decode(token)) {
-        isValid = true;
+const auth = {
+  /**
+   * Verifica si hay una sesion iniciada
+   *
+   * @returns {Boolean} Retorna true si hay una session valida
+   */
+  userSignedIn: () => {
+    const token = localStorage.getItem('token');
+    let isValid = false;
+    if (token) {
+      try {
+        if (JWT.decode(token)) {
+          isValid = true;
+        }
+      } catch (error) {
+        return false;
       }
-    } catch (error) {
-      return false;
     }
-  }
-  return isValid;
+    return isValid;
+  },
 };
 
-exports.userSignedIn = userSignedIn;
+export default auth;

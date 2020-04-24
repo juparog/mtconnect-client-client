@@ -1,7 +1,10 @@
-// Dependencias
 import { library } from '@fortawesome/fontawesome-svg-core';
-
-// import your icons
+import {
+  faReacteurope,
+} from '@fortawesome/free-brands-svg-icons';
+import {
+  faFolderOpen,
+} from '@fortawesome/free-regular-svg-icons';
 import {
   faTools,
   faDesktop,
@@ -24,15 +27,8 @@ import {
   faEnvelope,
   faLock,
   faKey,
+  faBan,
 } from '@fortawesome/free-solid-svg-icons';
-
-import {
-  faFolderOpen,
-} from '@fortawesome/free-regular-svg-icons';
-
-import {
-  faReacteurope,
-} from '@fortawesome/free-brands-svg-icons';
 
 library.add(
   faTools,
@@ -58,4 +54,5 @@ library.add(
   faEnvelope,
   faLock,
   faKey,
+  faBan,
 );

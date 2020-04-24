@@ -1,118 +1,57 @@
-// Dependencias
-const convert = require('xml-js');
+import convert from 'xml-js';
 
-/*
-    => Convierte un cadena con formato XML a un archivo con formato JSON.
-        data: cadena de datos en formato XML
-    <= Retorna una estrutura con:
-        success: true indica exito ó false indicando error
-        data: el resultado en formato json en caso de tener exito
-*/
-const getDataJson = (data) => {
-  try {
-    const options = {
-      compact: true,
-      spaces: 4,
-      attributesKey: 'attributes',
-      textKey: 'text',
-    };
-    const result = convert.xml2js(data, options);
-    return {
-      success: true,
-      data: result,
-    };
-  } catch (error) {
-    return {
-      success: false,
-    };
-  }
-};
-
-/*
-    =>  Analiza un cadena en formato JSON y con norma MTConnect y busca los dispositivos:
-        MTConnectData: cadena de datos en formato json
-    <=  Retorna una estructura de datos con:
-        success: true indica exito ó false indicando error
-        data: un array de dispositivos encontrados con sus nodos internos
-*/
-const getDevices = (data) => {
-  let devices = [];
-  if (data.Devices) {
-    if (data.Devices.Device) {
-      if (data.Devices.Device[0]) {
-        devices = data.Devices.Device;
-      } else {
-        devices.push(data.Devices.Device);
-      }
-      return ({
-        success: true,
-        devices,
-      });
+const dataParser = {
+  /**
+   * Convierte un string en formato xml a json.
+   *
+   * @param {Object} data Datos en formato xml
+   * @return {Object} El resultado de la operacion, null si la operacion falla
+   */
+  getDataJson: (data) => {
+    try {
+      // Opciones para la conversion
+      const options = {
+        compact: true,
+        spaces: 4,
+        attributesKey: 'attributes',
+        textKey: 'text',
+      };
+      const json = convert.xml2js(data, options);
+      return json;
+    } catch (error) {
+      return null;
     }
-  }
-  return ({
-    success: false,
-    devices: {},
-  });
-};
+  },
 
-/*
-    =>  Analiza un cadena en formato JSON y busca nombres de los dispositivos:
-        devices: cadena de dispositos en formato json
-    <=  Retorna una estructura de datos con:
-        success: true indica exito ó false indicando error
-        name: un array de nombres para los dispositivos
-*/
-const getDeviceNames = (devices) => {
-  const names = [];
-  try {
-    devices.forEach((device, index) => {
-      if (device.attributes) {
-        if (device.attributes.name) {
-          names.push(device.attributes.name);
-        } else if (device.attributes.id) {
-          names.push(device.attributes.id);
-        } else {
-          names.push(`no_identificado_${index}`);
-        }
-      } else {
-        names.push(`Device_${index}`);
-      }
-    });
-    return ({
-      success: true,
-      names,
-    });
-  } catch (error) {
-    return {
-      success: false,
-      names: {},
-    };
-  }
-};
+  /**
+   * Analiza un cadena en formato JSON y busca los dispositivos.
+   *
+   * @param {Object} data Datos en fomato json
+   * @return {Array} El resultado de la operacion
+   */
+  getDevices: (data) => dataParser.arrayFormat(data.Devices.Device),
 
-const getStream = (data) => {
-  let deviceStream = [];
-  if (data.Streams) {
-    if (data.Streams.DeviceStream) {
-      if (data.Streams.DeviceStream[0]) {
-        deviceStream = data.Streams.DeviceStream;
-      } else {
-        deviceStream.push(data.Streams.DeviceStream);
-      }
-      return ({
-        success: true,
-        deviceStream,
-      });
+  /**
+   * Analiza un cadena en formato JSON y busca los stream.
+   *
+   * @param {Object} data Datos en fomato json
+   * @return {Array} El resultado de la operacion
+   */
+  getStream: (data) => dataParser.arrayFormat(data.Streams.DeviceStream),
+
+  /**
+   * Esta funcion recibe y un datos verifica si es un array, si lo es entonces
+   * devulve el mismo dato, sino lo devuelve como la primera posición de un array
+   *
+   * @param {Object} possibleArray Posible dato de tipo array
+   * @return {Array} Resultado de la operación
+   */
+  arrayFormat: (possibleArray) => {
+    if (possibleArray.length) {
+      return possibleArray;
     }
-  }
-  return ({
-    success: false,
-    deviceStream: {},
-  });
+    return [possibleArray];
+  },
 };
 
-exports.getDataJson = getDataJson;
-exports.getDevices = getDevices;
-exports.getDeviceNames = getDeviceNames;
-exports.getStream = getStream;
+export default dataParser;

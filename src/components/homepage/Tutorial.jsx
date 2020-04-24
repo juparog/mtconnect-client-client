@@ -1,9 +1,11 @@
-// Dependencias
 import React, { PureComponent } from 'react';
 import { Link } from 'react-router-dom';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-// Clase para el componente la vista de tutorial
+/**
+ * Componente para vista tutorial
+ */
 class Tutorial extends PureComponent {
   render() {
     return (

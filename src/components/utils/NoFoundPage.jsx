@@ -1,10 +1,12 @@
-// Dependencias
 import React, { PureComponent } from 'react';
 import { Jumbotron, Card } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-// Clase para el componente que muestra la vista cuando se ingresa una ruta incorrecta
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+/**
+ * Componente para mostrar cuando se intenta acceder a una
+ * ruta no funcional o que no se puede encontrar
+ */
 class NoFoundPage extends PureComponent {
   render() {
     return (

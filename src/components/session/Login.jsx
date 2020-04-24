@@ -1,17 +1,13 @@
-// Dependencias
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import { Mutation } from 'react-apollo';
+import { Link } from 'react-router-dom';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import PropTypes from 'prop-types';
 
-// Componentes
-import Flash from 'Components/utilities/Flash';
+import Flash from '~/components/utils/Flash';
+import { Mutations } from '~/utils/mutations';
 
-// Mutaciones para la api
-import { Mutations } from 'Utils/mutations';
-
-// Recursos
 import logo from '../../../public/logo.png';
 
 // Clase para generar el componente que muestra la vista de inicio de sesion
@@ -74,10 +70,10 @@ class Login extends Component {
   }
 
   // Mostrar alerta con errores para el registro
-  showAlert(_visibility, _message = '*') {
+  showAlert(visibility, message = '*') {
     this.setState({
-      visibility: _visibility,
-      message: _message,
+      visibility,
+      message,
     });
   }
 

@@ -1,13 +1,13 @@
 // Dependencias
-import { ApolloClient } from 'apollo-client';
 import { gql } from 'apollo-boost';
-import { HttpLink } from 'apollo-link-http';
-import { ApolloLink } from 'apollo-link';
 import { InMemoryCache } from 'apollo-cache-inmemory';
+import { ApolloClient } from 'apollo-client';
+import { ApolloLink } from 'apollo-link';
+import { HttpLink } from 'apollo-link-http';
 
 // Inicializaciones
 const defaultApiUri = 'http://localhost:4000/graphql';
-const httpLink = new HttpLink({ uri: process.env['apiUri'] || defaultApiUri });
+const httpLink = new HttpLink({ uri: process.env.apiUri || defaultApiUri });
 
 // Middlewares
 const authMiddleware = new ApolloLink((operation, forward) => {

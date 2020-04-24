@@ -1,4 +1,3 @@
-// Dependencias
 import React, { PureComponent } from 'react';
 import { Redirect } from 'react-router-dom';
 

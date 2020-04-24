@@ -1,8 +1,10 @@
-// Dependencias
 import React, { PureComponent } from 'react';
 import { Link } from 'react-router-dom';
 
-// Clase que se encarga de mostrar la barra de navegacion ene el dashboard
+/**
+ * Componente encargado de mostrar la barra de
+ * navegación en la pagina de dashboard
+ */
 class NavbarDash extends PureComponent {
   render() {
     return (

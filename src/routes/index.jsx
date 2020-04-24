@@ -1,10 +1,14 @@
-// Componentes
-import Homepage from 'Containers/homepage/Homepage';
-import Dashboard from 'Containers/dashboard/Dashboard';
-import Session from 'Containers/session/Session';
-import NoFoundPage from 'Components/utilities/NoFoundPage';
+import NoFoundPage from '~/components/utils/NoFoundPage';
+import Dashboard from '~/containers/dashboard/Dashboard';
+import Homepage from '~/containers/homepage/Homepage';
+import Session from '~/containers/session/Session';
 
-// Mapa con rutas principales
+/**
+ * retorna un array con las la configuracion de rutas
+ * principales para react-router-dom
+ *
+ * @return {Array} default
+ */
 export default [
   {
     exact: true,

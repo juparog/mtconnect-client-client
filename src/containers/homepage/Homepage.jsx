@@ -1,25 +1,20 @@
-// Dependencias
 import React, { PureComponent } from 'react';
 import { Container } from 'react-bootstrap';
 import { Switch } from 'react-router-dom';
 
-// Componentes
-import NavBarHome from 'Components/homepage/NavBarHome';
-import FooterHome from 'Components/homepage/FooterHome';
-import RouteWithSubRoutes from 'Components/routeWithSubRoutes/RouteWithSubRoutes';
+import FooterHome from '~/components/homepage/FooterHome';
+import NavBarHome from '~/components/homepage/NavBarHome';
+import RouteWithSubRoutes from '~/components/routeWithSubRoutes/';
+import HomepageRoutes from '~/routes/homepage';
 
-// Rutas para la pagina de inicio
-import HomepageRoutes from 'Routes/homepage';
-
-// Clase para generar el componente contenedor de las vista para la pagina de inicio
+/**
+ * Componente contenedor para la pagina principal
+ */
 class Homepage extends PureComponent {
   render() {
     return (
-      <div className="Homepage bg-light">
-        {/* Componente para el navbar en la pagina de inicio */}
+      <div className="bg-light">
         <NavBarHome />
-
-        {/* Se renderiza los componentes segun la ruta solicitada */}
         <Container>
           <Switch>
             {HomepageRoutes.map((route, index) => (
@@ -27,13 +22,10 @@ class Homepage extends PureComponent {
             ))}
           </Switch>
         </Container>
-
-        {/* Componente para el footer en la pagina de inicio */}
         <FooterHome />
       </div>
     );
   }
 }
 
-// exportacion del modulo
 export default Homepage;

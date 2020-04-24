@@ -1,38 +1,65 @@
 {
-    "env": {
-        "browser": true,
-        "es6": true,
-        "node": true
+  "env": {
+    "browser": true,
+    "es6": true,
+    "node": true
+  },
+  "extends": [
+    "plugin:react/recommended",
+    "airbnb"
+  ],
+  "globals": {
+    "Atomics": "readonly",
+    "SharedArrayBuffer": "readonly"
+  },
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
     },
-    "extends": [
-        "plugin:react/recommended",
-        "airbnb"
+    "ecmaVersion": 2018,
+    "sourceType": "module"
+  },
+  "plugins": [
+    "react",
+    "import-helpers"
+  ],
+  "rules": {
+    "no-console": "off",
+    "react/jsx-props-no-spreading": ["error", {
+      //"html" : "enforce",
+      "custom": "ignore"
+      // "excepciones" : [ "RouteWithSubRoutes" ]
+    }],
+    "camelcase": ["error", {
+      "allow": ["^UNSAFE_"]
+    }],
+    "linebreak-style": ["error", "windows"],
+    "import-helpers/order-imports": [
+      "warn",
+      {
+        "newlinesBetween": "always", // new line between groups
+        "groups": [
+          "/^react/",
+          "module",
+          "/^~/",
+          ["parent", "sibling", "index"]
+        ],
+        "alphabetize": {
+          "order": "asc",
+          "ignoreCase": true
+        }
+      }
     ],
-    "globals": {
-        "Atomics": "readonly",
-        "SharedArrayBuffer": "readonly"
-    },
-    "parserOptions": {
-        "ecmaFeatures": {
-            "jsx": true
-        },
-        "ecmaVersion": 2018,
-        "sourceType": "module"
-    },
-    "plugins": [
-        "react"
-    ],
-    "rules": {
-        "no-console": "off",
-        "react/jsx-props-no-spreading": [ "error", {
-            //"html" : "enforce",
-            "custom": "ignore" 
-            // "excepciones" : [ "RouteWithSubRoutes" ]
-        }],
-        "camelcase": ["error", {"allow": ["^UNSAFE_"]}],
-        "linebreak-style": ["error", "windows"]
-    },
-    "settings": {
-        "import/resolver": "webpack" 
+    "prefer-destructuring": ["error", {
+      "object": true,
+      "array": false
+    }]
+  },
+  "settings": {
+    "import/resolver": {
+      "webpack": {
+        "config": "./config/webpack/webpack.config.js"
+      }
     }
+  }
 }

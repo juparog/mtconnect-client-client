@@ -6,8 +6,8 @@ const Config = require('../environment/config');
 const Webpack = require('webpack');
 
 // Inicializaciones
-const basePath = __dirname;
-const buildPath = '../../build';
+const basePath = process.cwd();
+const buildPath = './build';
 
 const indexInput = './public/index.html';
 const indexOutput = 'index.html';  
@@ -29,10 +29,13 @@ function webpackConfigGenerator(mode) {
     },
 
     module: {
-      rules: [{
+      rules: [
+        {
           test: /\.(js|jsx)$/,
           exclude: /node_modules/,
-          loader: "babel-loader"
+          loader: [
+            "babel-loader",
+          ]
         },
         {
           test: /\.css$/,
@@ -61,6 +64,7 @@ function webpackConfigGenerator(mode) {
       new HtmlWebpackPlugin({
         template: indexInput,
         filename: indexOutput,
+        favicon: "./public/favicon.ico",
         inject: "body"
       }),
       new MiniCSSExtract({
@@ -77,13 +81,7 @@ function webpackConfigGenerator(mode) {
 
     resolve: {
       alias: {
-        Components: Path.resolve(basePath, '../../src/components/'),
-        Containers: Path.resolve(basePath, '../../src/containers/'),
-        Env: Path.resolve(basePath, '../environment/'),
-        MTConnect: Path.resolve(basePath, '../../src/mtconnect/'),
-        Routes: Path.resolve(basePath, '../../src/routes/'),
-        Stylesheet: Path.resolve(basePath, '../../src/stylesheet/'),
-        Utils: Path.resolve(basePath, '../../src/utils/'),
+        "~": Path.resolve(basePath, './src/'),
       },
       extensions: ['.js', '.jsx']
     }
