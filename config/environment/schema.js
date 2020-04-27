@@ -14,8 +14,9 @@ module.exports =  {
   reactApp: {
     apiUri: {
       doc: "The url for the data api.",
-      format: 'url',
-      default: 'http://localhost:4000/graphql'
+      format: "url",
+      default: "http://localhost:4000/graphql",
+      env: "REACT_APP_API_URI"
     }
   }
 }
