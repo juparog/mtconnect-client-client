@@ -83,7 +83,7 @@ La aplicación puede desplegarce con un servidor express el cual esta configurad
 
 ## Wiki 📖
 ---
-Podra encontrar más detalles de como usar la aplicación aquí [Wiki](https://eslint.org/) (proximamente...)
+Podra encontrar más detalles de como usar la aplicación aquí [Wiki](https://#) (proximamente...)
 
 ## Versionado 📌
 ---
@@ -91,7 +91,7 @@ Se usa [Git](https://github.com/) para el versionado y Github como alojamiento r
 
 ## Autores ✒️
 ---
-  * ![](https://avatars3.githubusercontent.com/u/20565331?s=50&u=a2ff3ce90ae29ad6515ab7415993f86b7588f9b9&v=4) **Efrain Rodriguez** - _Sponsor_ - [EfrainRodriguez](https://github.com/EfrainRodriguez). ![test](https://git-scm.com/favicon.ico)
+  * ![](https://avatars3.githubusercontent.com/u/20565331?s=50&u=a2ff3ce90ae29ad6515ab7415993f86b7588f9b9&v=4) **Efrain Rodriguez** - _Sponsor_ - [EfrainRodriguez](https://github.com/EfrainRodriguez).
   
   * ![](https://avatars2.githubusercontent.com/u/58745412?s=50&u=6f39dce34dda3cec7ca7eedb6981225e34b46a0a&v=4) **Juan Rodriguez** - _Developer_ - [engineer-jrg](https://github.com/engineer-jrg).
   
