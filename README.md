@@ -1,68 +1,105 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# MTCONNECT CLIENT-CLIENT
+---
+Este proyecto trata la parte del cliente para una aplicacion web que permite una conexión a un agente mtconnect y la visualización de sus datos.
 
-## Available Scripts
+## Comenzando 🚀
+---
+Estas instrucciones le permitirán obtener una copia del proyecto en funcionamiento en tu máquina local para propósitos de desarrollo y pruebas.
 
-In the project directory, you can run:
+### Pre-requisitos 📋
+  * ![test](https://git-scm.com/favicon.ico) **Git**. Para utilizar el control de versiones mediante linea de comandos con `$ git`, [Descargar Git](https://git-scm.com/downloads).
+  
+  * ![test](https://nodejs.org/favicon.ico) **Node JS**. Para descargar las dependencias del proyecto y ejecutar comandos con `$ npm`. [Descargar Node js](https://nodejs.org/es/download/).
+  
+  * ![test](https://github.com/favicon.ico) **MTconnect-client-server**. La api para solicitar y guardar algunos datos. [Instalar MTconnect-client-server](https://github.com/engineer-jrg/mtconnect-client-server).
 
-### `yarn start`
+### Instalación 🔧
+Ejecute las siguientes instrucciones en order mediante la cli de su sitema operativo para poder obtener una copia del proyecto funcional.
+  * Clonar el proyecto:
+  ```sh
+  git clone https://github.com/engineer-jrg/mtconnect-client-client.git
+  ```
+  * Moverse a la carpeta del proyecto:
+  ```sh
+  cd ./mtconnect-client-client
+  ```
+  * Instalar las dependencias necesarias:
+  ```sh
+  npm install
+  ```
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Si ejecuto todos estos comandos y no obtuvo ningun error usted ya tieneninstalado el proyecto en su máquina local correctamente.
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+## Configuración ⚙️
+---
+Configuración de las variables de entorno:
+  * Se deben crear dos archivo en la ruta `config/environment/` con los siguientes nombres:
+  para desarrollo: `.env.development.json
+  para producción: ".env.production.json"
 
-### `yarn test`
+  * En cada archivo se debe crear la configuración de cada ambiente, se puede usar como guía el archivo de esquema ubicado en la ruta `config/environment/schema.js`. La configuración de ambientes se hace en formto JSON, a continuación se muestra una ejemplo de como se veria un archivo de estos:
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+  ```javascript
+  // .env.development.json
+  {
+      "env": "development",
+      "port": 3000,
+      "reactApp": {
+        "apiUri": "http://la/url/de/la/api/MTconnect/client/server"
+      }
+  }
+  ```
 
-### `yarn build`
+## Despliegue 📦
+---
+Puede desplegar la aplicacion en dos modos: producción y desarrollo,ejecutando los siguientes comandos:
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+**Para desarrollo** ☔
+  * Lanzar la aplicación:
+  `npm run start:dev`
+  * Construir la aplicación:
+  `npm run build:dev`
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+**Para producción** ☕
+  * Lanzar la aplicación:
+  `npm run start:prod`
+  * Construir la aplicación:
+  `npm run build`
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+**Desplegar con el servidor express** 🕋
+La aplicación puede desplegarce con un servidor express el cual esta configurado en el archivo `server.js` ubicado en la raiz del proyecto siguiendo estos pasos:
+  * Contruir la aplicacion en cualquiera de los modos anteriores:
+  `npm run build`
+  ó
+  `npm run build:dev`
+  * Lanzar el servidor
+  `npm start`
 
-### `yarn eject`
+## Construido con 🛠
+---
+  * [**React**](https://es.reactjs.org/) - Biblioteca de JavaScript para construir la interfaz
+  * [**Webpack**](https://webpack.js.org/) - Componente para construir la aplicación javascript.
+  *  [**Eslint**](https://eslint.org/) - Dependencia para estandarizar y regular el código.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Wiki 📖
+---
+Podra encontrar más detalles de como usar la aplicación aquí [Wiki](https://eslint.org/) (proximamente...)
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Versionado 📌
+---
+Se usa [Git](https://github.com/) para el versionado y Github como alojamiento remoto para el proyecto. Para mirar todas las versiones disponibles desde aquí [Tags](https://github.com/engineer-jrg/mtconnect-client-client/tags)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Autores ✒️
+---
+  * ![](https://avatars3.githubusercontent.com/u/20565331?s=50&u=a2ff3ce90ae29ad6515ab7415993f86b7588f9b9&v=4) **Efrain Rodriguez** - _Sponsor_ - [EfrainRodriguez](https://github.com/EfrainRodriguez). ![test](https://git-scm.com/favicon.ico)
+  
+  * ![](https://avatars2.githubusercontent.com/u/58745412?s=50&u=6f39dce34dda3cec7ca7eedb6981225e34b46a0a&v=4) **Juan Rodriguez** - _Developer_ - [engineer-jrg](https://github.com/engineer-jrg).
+  
+## Licencia 📄
+---
+Este proyecto está bajo la Licencia (Por definir) - mira el archivo LICENSE.md para detalles
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+## Expresiones de Gratitud 🎁
+---
+  * Los desarrolladores de [cppagent](https://github.com/mtconnect/cppagent), el cual fue el agente mtconnect utilizado para desarrollar las pruebas 📦.
+  * [**Efrain Rodriguez**](https://github.com/EfrainRodriguez) por el patrocinio y el apoyo durante su desarrollo 💪.
