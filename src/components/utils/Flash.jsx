@@ -36,15 +36,15 @@ class Flash extends Component {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    const { visibility } = this.state;
-    if (nextProps.visibility !== visibility) {
-      this.setState({
-        visibility: nextProps.visibility,
-        title: nextProps.title || null,
-        message: nextProps.message || null,
-        type: nextProps.type || 'info',
-      });
-    }
+    const st = {};
+    Object.entries(this.state).forEach((prevProp) => {
+      const property = prevProp[0];
+      const value = prevProp[1];
+      if (value !== nextProps[property]) {
+        st[property] = nextProps[property];
+      }
+      this.setState(st);
+    });
   }
 
   /**
@@ -90,9 +90,7 @@ class Flash extends Component {
               {title
                 ? <Alert.Heading>{title}</Alert.Heading>
                 : null}
-              {message
-                ? <p className="m-0">{message}</p>
-                : null}
+              {message || null}
             </Alert>
           )
           : null}
@@ -104,7 +102,10 @@ class Flash extends Component {
 Flash.propTypes = {
   visibility: PropTypes.bool,
   title: PropTypes.string,
-  message: PropTypes.string,
+  message: PropTypes.oneOfType([
+    PropTypes.array,
+    PropTypes.string,
+  ]),
   type: PropTypes.string,
 
   // controlar la visibilidad del flash mensage en el componente padre

@@ -54,10 +54,24 @@ class Logup extends Component {
     }).then((res) => {
       const { success, errors, token } = res.data.createUser;
       if (!success) {
-        if (errors[0]) {
-          this.showAlert(true, `* ${errors[0].path}: ${errors[0].message}`);
-        } else {
-          this.showAlert(true, `* ${errors.path}: ${errors.message}`);
+        if (errors.length) {
+          const errorsText = [];
+          errors.forEach((error) => {
+            errorsText.push(
+              <p
+                key={errorsText.length}
+                className="m-0"
+              >
+                *&nbsp;
+                <strong>
+                  {error.path}
+                  :&nbsp;
+                </strong>
+                {error.message}
+              </p>,
+            );
+          });
+          this.showAlert(true, errorsText);
         }
       } else {
         localStorage.setItem('token', token || null);
@@ -98,12 +112,6 @@ class Logup extends Component {
                 <div className="card card-login col-md-4 mx-auto text-center bg-dark">
                   <div className="card-header mx-auto bg-dark">
                     <h3 className="mt-3 text-white"> ¡Registrarse aquí! </h3>
-                    <Flash
-                      visibility={visibility}
-                      message={message}
-                      type="danger"
-                      showAlert={this.showAlert}
-                    />
                   </div>
                   <div className="card-body">
                     <div className="input-group form-group">
@@ -146,11 +154,17 @@ class Logup extends Component {
                       </div>
                       <input value={password} onChange={this.handleChange} name="password" type="password" className="form-control" autoComplete="password" placeholder="Contraseña" required />
                     </div>
-                    <div className="row widget">
+                    <div className="row widget mb-2">
                       <div className="col-md-12 col-xs-12 col-sm-12">
                         <input type="submit" value="Regístrate" className="btn btn-primary float-center" />
                       </div>
                     </div>
+                    <Flash
+                      visibility={visibility}
+                      message={message}
+                      type="danger"
+                      showAlert={this.showAlert}
+                    />
                     <div className="dropdown-divider" />
                     <div>
                       <span className="mb-5">

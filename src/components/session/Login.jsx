@@ -48,10 +48,24 @@ class Login extends Component {
       // console.log(res);
       const { success, token, errors } = res.data.loginUser;
       if (!success) {
-        if (errors[0]) {
-          this.showAlert(true, `* ${errors[0].path}: ${errors[0].message}`);
-        } else {
-          this.showAlert(true, `* ${errors.path}: ${errors.message}`);
+        if (errors.length) {
+          const errorsText = [];
+          errors.forEach((error) => {
+            errorsText.push(
+              <p
+                key={errorsText.length}
+                className="m-0"
+              >
+                *&nbsp;
+                <strong>
+                  {error.path}
+                  :&nbsp;
+                </strong>
+                {error.message}
+              </p>,
+            );
+          });
+          this.showAlert(true, errorsText);
         }
       } else {
         localStorage.setItem('token', token || null);
@@ -98,12 +112,6 @@ class Login extends Component {
                   </span>
                   <br />
                   <span className="mt-5 text-white"> Iniciar sesión </span>
-                  <Flash
-                    visibility={visibility}
-                    message={message}
-                    type="danger"
-                    showAlert={this.showAlert}
-                  />
                 </div>
                 <div className="card-body">
                   <form onSubmit={
@@ -129,8 +137,13 @@ class Login extends Component {
                       <input value={password} onChange={this.handleChange} name="password" type="password" className="form-control" autoComplete="current-password" placeholder="contraseña" required />
                     </div>
                     <div className="form-group">
-                      <input type="submit" value="Ingresar" className="btn btn-primary float-center" />
-                      <br />
+                      <input type="submit" value="Ingresar" className="btn btn-primary float-center mb-2" />
+                      <Flash
+                        visibility={visibility}
+                        message={message}
+                        type="danger"
+                        showAlert={this.showAlert}
+                      />
                       <div className="dropdown-divider" />
                       <span className="mb-5">
                         <Link to="/session/signup" className="text-primary">Resgistrarse  </Link>
